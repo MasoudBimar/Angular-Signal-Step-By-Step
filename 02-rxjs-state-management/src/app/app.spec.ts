@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
-import { rxJsStateManagement } from './rxJsStateManagement';
+import { rxJsStateManagement } from './rxJs-state-management';
 
 describe('App', () => {
   beforeEach(async () => {

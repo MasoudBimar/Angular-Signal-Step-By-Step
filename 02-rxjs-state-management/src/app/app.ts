@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { rxJsStateManagement } from './rxJsStateManagement';
+import { rxJsStateManagement } from './rxJs-state-management';
 
 @Component({
   imports: [rxJsStateManagement, RouterModule],
