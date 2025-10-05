@@ -1,5 +1,5 @@
 {
-  "name": "change-detection-01",
+  "name": "change-detection",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
@@ -51,10 +51,10 @@
       "executor": "@angular/build:dev-server",
       "configurations": {
         "production": {
-          "buildTarget": "change-detection-01:build:production"
+          "buildTarget": "change-detection:build:production"
         },
         "development": {
-          "buildTarget": "change-detection-01:build:development"
+          "buildTarget": "change-detection:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -62,7 +62,7 @@
     "extract-i18n": {
       "executor": "@angular/build:extract-i18n",
       "options": {
-        "buildTarget": "change-detection-01:build"
+        "buildTarget": "change-detection:build"
       }
     },
     "lint": {
@@ -80,7 +80,7 @@
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "change-detection-01:build",
+        "buildTarget": "change-detection:build",
         "port": 4200,
         "staticFilePath": "dist/01-change-detection/browser",
         "spa": true

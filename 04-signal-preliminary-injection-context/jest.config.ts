@@ -1,8 +1,8 @@
 export default {
-  displayName: 'change-detection',
+  displayName: 'signal-preliminary-injection-context',
   preset: '../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../coverage/01-change-detection',
+  coverageDirectory: '../coverage/signal-preliminary-injection-context',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

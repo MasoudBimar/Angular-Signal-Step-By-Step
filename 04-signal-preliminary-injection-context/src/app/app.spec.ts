@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
-import { rxJsStateManagement } from './rxJs-state-management';
+import { NxWelcome } from './nx-welcome';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App, rxJsStateManagement],
+      imports: [App, NxWelcome],
     }).compileComponents();
   });
 
@@ -14,7 +14,7 @@ describe('App', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Welcome rxjs-state-management'
+      'Welcome signal-preliminary-injection-context'
     );
   });
 });

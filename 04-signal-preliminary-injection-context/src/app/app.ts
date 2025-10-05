@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ChangeDetectionSampleOnPush } from './change-detection-sample-onpush';
+import { NxWelcome } from './nx-welcome';
+import { interval } from 'rxjs';
 
 @Component({
-  imports: [ChangeDetectionSampleOnPush, RouterModule],
+  imports: [NxWelcome, RouterModule],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
-  protected title = 'change-detection';
+  protected title = 'signal-preliminary-injection-context';
 }

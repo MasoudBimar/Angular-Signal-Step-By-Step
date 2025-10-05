@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ChangeDetectionSampleOnPush } from './change-detection-sample-onpush';
+import { NxWelcome } from './nx-welcome';
 
 @Component({
-  imports: [ChangeDetectionSampleOnPush, RouterModule],
+  imports: [NxWelcome, RouterModule],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
-  protected title = 'change-detection';
+  protected title = 'signal-first-touch';
 }

@@ -1,26 +1,26 @@
 {
-  "name": "02-rxjs-state-management",
+  "name": "signal-preliminary-injection-context",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "02-rxjs-state-management/src",
+  "sourceRoot": "signal-preliminary-injection-context/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/rxjs-state-management",
-        "browser": "02-rxjs-state-management/src/main.ts",
+        "outputPath": "dist/signal-preliminary-injection-context",
+        "browser": "signal-preliminary-injection-context/src/main.ts",
         "polyfills": ["zone.js"],
-        "tsConfig": "02-rxjs-state-management/tsconfig.app.json",
+        "tsConfig": "signal-preliminary-injection-context/tsconfig.app.json",
         "assets": [
           {
             "glob": "**/*",
-            "input": "02-rxjs-state-management/public"
+            "input": "signal-preliminary-injection-context/public"
           }
         ],
-        "styles": ["02-rxjs-state-management/src/styles.css"]
+        "styles": ["signal-preliminary-injection-context/src/styles.css"]
       },
       "configurations": {
         "production": {
@@ -51,10 +51,10 @@
       "executor": "@angular/build:dev-server",
       "configurations": {
         "production": {
-          "buildTarget": "02-rxjs-state-management:build:production"
+          "buildTarget": "signal-preliminary-injection-context:build:production"
         },
         "development": {
-          "buildTarget": "02-rxjs-state-management:build:development"
+          "buildTarget": "signal-preliminary-injection-context:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -62,7 +62,7 @@
     "extract-i18n": {
       "executor": "@angular/build:extract-i18n",
       "options": {
-        "buildTarget": "02-rxjs-state-management:build"
+        "buildTarget": "signal-preliminary-injection-context:build"
       }
     },
     "lint": {
@@ -72,17 +72,17 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "02-rxjs-state-management/jest.config.ts",
-        "tsConfig": "02-rxjs-state-management/tsconfig.spec.json"
+        "jestConfig": "signal-preliminary-injection-context/jest.config.ts",
+        "tsConfig": "signal-preliminary-injection-context/tsconfig.spec.json"
       }
     },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "02-rxjs-state-management:build",
+        "buildTarget": "signal-preliminary-injection-context:build",
         "port": 4200,
-        "staticFilePath": "dist/rxjs-state-management/browser",
+        "staticFilePath": "dist/signal-preliminary-injection-context/browser",
         "spa": true
       }
     }

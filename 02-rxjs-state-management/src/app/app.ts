@@ -9,5 +9,5 @@ import { rxJsStateManagement } from './rxJs-state-management';
   styleUrl: './app.css',
 })
 export class App {
-  protected title = '02-rxjs-state-management';
+  protected title = 'rxjs-state-management';
 }
