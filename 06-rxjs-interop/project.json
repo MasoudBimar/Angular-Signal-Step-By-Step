@@ -1,0 +1,90 @@
+{
+  "name": "rxjs-interop",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "rxjs-interop/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/rxjs-interop",
+        "browser": "rxjs-interop/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "rxjs-interop/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "rxjs-interop/public"
+          }
+        ],
+        "styles": ["rxjs-interop/src/styles.css"]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "rxjs-interop:build:production"
+        },
+        "development": {
+          "buildTarget": "rxjs-interop:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular/build:extract-i18n",
+      "options": {
+        "buildTarget": "rxjs-interop:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "rxjs-interop/jest.config.ts",
+        "tsConfig": "rxjs-interop/tsconfig.spec.json"
+      }
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "rxjs-interop:build",
+        "port": 4200,
+        "staticFilePath": "dist/rxjs-interop/browser",
+        "spa": true
+      }
+    }
+  }
+}

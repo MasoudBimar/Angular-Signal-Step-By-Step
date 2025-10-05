@@ -3,7 +3,26 @@ import { CommonModule } from '@angular/common';
 import { interval } from 'rxjs';
 import { startCounting } from './app.util';
 
-
+/**
+ * Reactive Context (synchronous)
+ *
+ * An effect is a reactive context that runs a function whenever the signals it depends on change.
+ * Effects are used to perform side effects in response to signal changes, such as updating the DOM or making HTTP requests.
+ *
+ * Effects can only be created within an injection context, such as a component or a service.
+ * 
+ * Reactive context is a context that has access to the Angular dependency injection system.
+ * This means that you can use the inject function to access services and other dependencies within an effect.
+ * Reactive context is Locations in your code where angular follows calling signals
+ * 1. inside the body of a computed : derived = computed(() => { firstSignal() * 2})
+ * 2. inside the body of an effect:  effect(() => { console.log(firstSignal())})
+ * 
+ * In Reactive context :
+ *  It's Ok to read from signals
+ *  It's Not Ok to Modify signals
+ *  It's Not Ok to create signals
+ *  It's Not Ok to create an effect
+ */
 @Component({
     selector: 'app-signal-and-injection',
     imports: [CommonModule],
@@ -55,12 +74,12 @@ export class SignalAndInjection {
 
         // *************************************
         // what if we want to stop the effect before destorying the component
-        this.ef = effect(() =>{
+        this.ef = effect(() => {
             console.log(this.value());
-        }, {injector: this.injector});
+        }, { injector: this.injector });
     }
 
-    stop(){
+    stop() {
         this.ef?.destroy();
         this.ef = null;
     }
