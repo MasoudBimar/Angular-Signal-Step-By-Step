@@ -1,9 +1,0 @@
-{
-  "name": "change-detection-01-e2e",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "projectType": "application",
-  "sourceRoot": "01-change-detection-e2e/src",
-  "implicitDependencies": ["change-detection-01"],
-  "// targets": "to see all targets run: nx show project change-detection-01-e2e --web",
-  "targets": {}
-}

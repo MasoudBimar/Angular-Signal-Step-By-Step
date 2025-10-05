@@ -17,12 +17,12 @@ export class NxWelcome implements OnInit {
 
   // ***********************************************************
   // The better way is to keep the refernece to Injector itself
-  // and use it to create out own injection context later
+  // and use it to create our own injection context later
   private injector = inject(Injector);
 
 
   constructor() {
-    const sub = interval(1000).subscribe(console.log);
+    const sub = interval(1000).subscribe(console.log); // without unsubscribe this subscription will be open ==> memory leak
     // every subscription need to be unsubscribed
     // So thechnically this subscription will be open
     // event when the compononet will be destroyed
@@ -38,6 +38,7 @@ export class NxWelcome implements OnInit {
     // startCounting();// works perfectly
     // startCounting2();// works perfectly
 
+    // the inject method cannot be used anywhere
     // the inject method can be used just in Injection Context
     // What is the Injection Context?
     // injection context is the period of time when the object is constructed

@@ -1,9 +1,0 @@
-{
-  "name": "02-rxjs-state-management-e2e",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "projectType": "application",
-  "sourceRoot": "02-rxjs-state-management-e2e/src",
-  "implicitDependencies": ["02-rxjs-state-management"],
-  "// targets": "to see all targets run: nx show project 02-rxjs-state-management-e2e --web",
-  "targets": {}
-}
