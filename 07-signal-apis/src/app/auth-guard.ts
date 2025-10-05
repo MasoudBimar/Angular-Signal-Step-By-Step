@@ -46,3 +46,16 @@ export const authGuard: CanActivateFn = () => inject(AuthService).isLoggedIn();
 //     readonly num = inject('SOME_NUMBER');
 //     readonly title = input.required<string>();
 // }
+
+// TODO: Why functions instead of classes?
+
+// 1. avoid unneccessary classes just for DI
+// 2. Less decorators
+// 3. Less lifecycle hooks
+// 4. Cleaner, more direct code
+// ??: so we have: 
+// 1. Less boilerplate code
+// 2. No need to remember lifecycle hooks
+// 3. Better tree-shaking
+// 4. Easier to read and maintain
+// 5. More consistent with functional programming paradigm
