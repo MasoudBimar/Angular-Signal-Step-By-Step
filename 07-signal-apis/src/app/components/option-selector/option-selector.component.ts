@@ -13,6 +13,11 @@ export class OptionSelectorComponent {
   readonly options = input.required<string[]>();
   readonly templateDirective = contentChild(OptionDirective);
 
+  // model combines input and output behavior => two-way binding
+  // it can be set from outside and inside the component
+  // input signal is readonly
+  readonly model = model<string | null>(null);
+  // with model  we can set and update the value from inside the component
   readonly selected = model.required();
 
   select(option: string) {

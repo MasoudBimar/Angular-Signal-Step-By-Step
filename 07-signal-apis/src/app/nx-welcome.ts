@@ -31,6 +31,7 @@ import { RATES } from './components/currency-converter/rates';
   aria-labelledby="currency-label"
   [options]="currencies" 
   [(selected)]="currency">
+  <!-- we dont call the model signal in this case -->
 
   <span *appOption="let currency" class="currency-option">
     <img [src]="'/icons/' + currency + '.svg'" alt="{{ currency }}" class="currency-icon"/>
