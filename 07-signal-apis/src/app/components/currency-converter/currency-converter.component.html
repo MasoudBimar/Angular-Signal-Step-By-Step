@@ -1,2 +1,10 @@
-Converted Amount: {{ converted() | currency:currency() }}
-<img src="/refresh.svg" (click)="manualRefresh$.next()">
+Converted Amount: {{ converted() | currency : currency() }}
+<img
+  src="/refresh.svg"
+  (click)="manualRefresh$.next()"
+  (keydown.enter)="manualRefresh$.next()"
+  alt="Refresh"
+  style="width: 20px; height: 20px; cursor: pointer"
+  title="Refresh"
+  tabindex="0"
+/>
