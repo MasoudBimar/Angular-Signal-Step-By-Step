@@ -5,5 +5,5 @@ import { Directive, inject, TemplateRef } from "@angular/core";
     standalone: true,
 })
 export class OptionDirective {
-    readonly template = inject(TemplateRef<string>);
+    readonly template = inject(TemplateRef<string>); // ? structural directive
 }

@@ -3,11 +3,15 @@
   class="option"
   [class.selected]="option === selected()"
   (click)="select(option)"
+  (keydown.enter)="select(option)"
+  tabindex="0"
 >
   @if(templateDirective(); as directive) {
-    <ng-container *ngTemplateOutlet="directive.template; context: {$implicit: option}"/>
+  <ng-container
+    *ngTemplateOutlet="directive.template; context: { $implicit: option }"
+  />
   } @else {
-    {{ option }}
+  {{ option }}
   }
 </div>
 }

@@ -35,7 +35,7 @@ import { RgbDirective } from './rgb.directive';
       [(selected)]="currency"
     >
       <!-- we dont call the model signal in this case -->
-
+      <!-- create a template for the currency option -->
       <span *appOption="let currency" class="currency-option">
         <img
           [src]="'/icons/' + currency + '.svg'"
@@ -55,6 +55,7 @@ import { RgbDirective } from './rgb.directive';
     />
 
     <button (click)="stopRefresh()">Stop Refresh Events</button>
+
   `,
   styles: [],
   encapsulation: ViewEncapsulation.None,
@@ -139,3 +140,8 @@ export class NxWelcome implements OnInit, AfterViewInit {
 // In the case of signals we can access the value right away because it is lazy evaluated
 // so when we call the method that uses the viewChild it will get the value at that time
 // so we dont need to wait for a lifecycle hook to access it
+
+
+// ? contentChild and contentChildren also have the same behavior as viewChild and viewChildren
+// ? In angular 18 signal based api -- content child and content children functions are used to query projected elements or components
+// ? withing a component's content and both of them return signals that hold the query results

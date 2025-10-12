@@ -11,7 +11,7 @@ import { OptionDirective } from './option.directive';
 })
 export class OptionSelectorComponent {
   readonly options = input.required<string[]>();
-  readonly templateDirective = contentChild(OptionDirective);
+  readonly templateDirective = contentChild(OptionDirective); // ? to get the template from the structural directive
 
   // model combines input and output behavior => two-way binding
   // it can be set from outside and inside the component
