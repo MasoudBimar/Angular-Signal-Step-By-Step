@@ -4,8 +4,12 @@
     "emitDecoratorMetadata": false,
     "target": "es2022",
     "module": "preserve",
-    "lib": ["es2020", "dom"],
-    "paths": {},
+    "lib": ["esnext", "dom"],
+    "skipLibCheck": true,
+    "paths": {
+      "@ng-doc/generated": ["./ng-doc/AngularSignal/index.ts"],
+      "@ng-doc/generated/*": ["./ng-doc/AngularSignal/*"]
+    },
     "isolatedModules": true
   },
   "angularCompilerOptions": {

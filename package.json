@@ -16,6 +16,12 @@
     "@angular/platform-browser": "~20.2.0",
     "@angular/platform-browser-dynamic": "~20.2.0",
     "@angular/router": "~20.2.0",
+    "@ng-doc/app": "20.1.0",
+    "@ng-doc/builder": "20.1.0",
+    "@ng-doc/core": "20.1.0",
+    "@ng-doc/ui-kit": "20.1.0",
+    "@orama/stemmers": "2.0.17",
+    "di-controls": "2.1.0",
     "rxjs": "~7.8.0",
     "zone.js": "~0.15.0"
   },
