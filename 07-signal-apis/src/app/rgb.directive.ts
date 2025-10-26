@@ -9,7 +9,7 @@ import {
   selector: '[appRgb]',
   standalone: true,
   host: {
-    '[style.color]': 'color()', 
+    '[style.color]': 'color()',
     '(click)': 'invert()'
   }
 })
@@ -19,6 +19,12 @@ export class RgbDirective {
   readonly blue = input(0);
 
   readonly inverted = signal(false);
+
+  // The old HostBinding way:
+  // @HostBinding('style.color')
+  // get color() { ... }  
+  // cant be used with signals directly
+  //  so the new host property syntax is preferred
 
 
   readonly color = computed(() =>
