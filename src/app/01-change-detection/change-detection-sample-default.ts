@@ -15,7 +15,7 @@ import { interval } from 'rxjs';
 
 `,
   styles: [],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class ChangeDetectionSampleDefault {
   readonly counter$ = interval(1000);

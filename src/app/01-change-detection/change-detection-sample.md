@@ -1,5 +1,10 @@
 # Change Detection in Angular
 
+- Change Detection Mechanism
+- Change Detection Strategies: Default vs OnPush
+- Best Practices with Change Detection
+-
+
 ## Overview
 
 Change Detection is a core mechanism in Angular that determines when and how the UI should be updated in response to application state changes. Angular provides two strategies for change detection: **Default** and **OnPush**.
@@ -24,15 +29,14 @@ With the **Default** strategy, Angular runs change detection very frequently - e
 
 ### What triggers Change Detection with OnPush Strategy?
 
-- async operations
 - inputs
 - angular events
 - trigger manually by change detector ref
 
-### What triggers Change Detection with Default Strategy?
+### What triggers Change Detection with Default Strategy(zone-based)?
 
-- Seems like all the time
-- But how?
+Seems like all the time, But how?
+
 - setTimeout
 - setInterval
 - addEventHandler
@@ -394,3 +398,251 @@ export class CounterComponent {
 ## Conclusion
 
 Angular 21's move to Zoneless mode and Signals represents a fundamental shift toward more predictable, performant, and maintainable applications. While it requires some migration effort for existing codebases, the benefits far outweigh the initial learning curve. Modern Angular development embraces explicit reactivity with Signals and OnPush change detection strategy for optimal performance! 🚀
+
+---
+
+## Behavior Comparison: Variables vs Signals Across Strategies
+
+The table below demonstrates how different combinations of state management (plain variables vs signals), change detection strategies (Default vs OnPush), and zone modes (Zone.js vs Zoneless) affect template updates when a value changes every second via `setInterval`.
+
+### Scenario Setup
+
+Both scenarios update a value every second using `setInterval`:
+
+```typescript
+// Scenario 1: Plain Variable
+counter = 0;
+
+constructor() {
+  setInterval(() => {
+    this.counter++;  // Updates in memory
+  }, 1000);
+}
+
+// Template
+<p>{{ counter }}</p>
+```
+
+```typescript
+// Scenario 2: Signal Variable
+counter = signal(0);
+
+constructor() {
+  setInterval(() => {
+    this.counter.set(this.counter() + 1);  // Explicit update
+  }, 1000);
+}
+
+// Template
+<p>{{ counter() }}</p>
+```
+
+### Comprehensive Behavior Table
+
+| Scenario                            |                                        With Zone.js + Default                                         |                                                   With Zone.js + OnPush                                                   |                                      Zoneless + Default                                      |                    Zoneless + OnPush                     |
+| ----------------------------------- | :---------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: | :------------------------------------------------------: |
+| **Plain Variable (interpolation)**  |                                            ✅ **Updates**                                             |                                                     ❌ **No Update**                                                      |                                       ❌ **No Update**                                       |                     ❌ **No Update**                     |
+|                                     |         After `setInterval` fires, Zone.js triggers CD → template checks value → DOM updates          | `setInterval` doesn't trigger CD in OnPush without manual marking → template never re-checked → variable change invisible | Without Zone.js, no CD trigger from async → template never re-checked → variable stays stale |    No auto-trigger, no signal → variable stays stale     |
+| **Signal Variable (function call)** |                                            ✅ **Updates**                                             |                                                      ✅ **Updates**                                                       |                                       ❌ **No Update**                                       |                      ✅ **Updates**                      |
+|                                     | CD triggers after `setInterval` → template checks signal → signal marks component dirty → DOM updates |                   Signal change marks component for check → CD runs → signal re-evaluates → DOM updates                   |    Without Zone.js and no CD, signal still marks component but no one listens → no update    | Signal marks component for check → CD runs → DOM updates |
+
+### Detailed Explanations
+
+#### 1. Plain Variable + Zone.js + Default Strategy
+
+**Result:** ✅ **Updates every second**
+
+```typescript
+// What happens:
+setInterval(() => {
+  this.counter++; // Plain variable updated
+}, 1000);
+// Zone.js detects the async operation
+// → Angular runs change detection automatically
+// → Template {{ counter }} is re-evaluated
+// → DOM shows the new value
+```
+
+**Why it works:** Zone.js patches `setInterval`, so after each tick, change detection automatically runs and the template can see the updated plain variable.
+
+---
+
+#### 2. Plain Variable + Zone.js + OnPush Strategy
+
+**Result:** ❌ **No updates**
+
+```typescript
+// What happens:
+setInterval(() => {
+  this.counter++; // Plain variable updated
+}, 1000);
+// Zone.js detects the async operation
+// → BUT OnPush says: "Only check on explicit triggers"
+// → setInterval is not an explicit trigger (no @Input, no event, no signal)
+// → Change detection does NOT run
+// → Template never re-evaluates
+// → Variable stays stale on screen
+```
+
+**Why it fails:** OnPush is strict—it ignores generic async operations. Without marking the component dirty manually, the template never re-checks.
+
+---
+
+#### 3. Plain Variable + Zoneless + Default Strategy
+
+**Result:** ❌ **No updates**
+
+```typescript
+// What happens:
+setInterval(() => {
+  this.counter++; // Plain variable updated
+}, 1000);
+// Without Zone.js, there's no automatic detection of async
+// → No one tells Angular to run change detection
+// → Template is never re-evaluated
+// → Variable stays stale
+```
+
+**Why it fails:** Even though the strategy is "Default," without Zone.js there's no mechanism to know when an async operation completes.
+
+---
+
+#### 4. Plain Variable + Zoneless + OnPush Strategy
+
+**Result:** ❌ **No updates**
+
+```typescript
+// What happens:
+setInterval(() => {
+  this.counter++; // Plain variable updated
+}, 1000);
+// No Zone.js → no async detection
+// OnPush is also waiting for explicit triggers
+// → Double failure: neither mechanism triggers CD
+// → Variable stays stale
+```
+
+**Why it fails:** Both CD triggers are disabled—Zone.js and OnPush explicit markers.
+
+---
+
+#### 5. Signal + Zone.js + Default Strategy
+
+**Result:** ✅ **Updates every second**
+
+```typescript
+// What happens:
+setInterval(() => {
+  this.counter.set(this.counter() + 1); // Signal updates
+}, 1000);
+// Zone.js detects the async operation
+// → Change detection runs automatically
+// → Template {{ counter() }} is re-evaluated
+// → Signal function call returns new value
+// → DOM updates
+```
+
+**Why it works:** Zone.js triggers CD, and signals seamlessly integrate—when CD runs, the signal provides the latest value.
+
+---
+
+#### 6. Signal + Zone.js + OnPush Strategy
+
+**Result:** ✅ **Updates every second**
+
+```typescript
+// What happens:
+setInterval(() => {
+  this.counter.set(this.counter() + 1); // Signal updates
+}, 1000);
+// Signal.set() internally marks the component for check
+// → Even with OnPush, the component is marked
+// → Change detection runs
+// → Template {{ counter() }} re-evaluates to the new value
+// → DOM updates
+```
+
+**Why it works:** Signals are "signal-aware"—they automatically mark the component dirty, triggering CD even with OnPush.
+
+---
+
+#### 7. Signal + Zoneless + Default Strategy
+
+**Result:** ❌ **No updates**
+
+```typescript
+// What happens:
+setInterval(() => {
+  this.counter.set(this.counter() + 1); // Signal updates
+}, 1000);
+// Without Zone.js, no one tells Angular to run CD
+// Signal marks the component, but no one is listening
+// → Change detection never runs
+// → Template never re-evaluates
+// → Variable stays stale
+```
+
+**Why it fails:** Without Zone.js, there's no trigger mechanism, and signals alone can't auto-start CD.
+
+---
+
+#### 8. Signal + Zoneless + OnPush Strategy
+
+**Result:** ✅ **Updates every second**
+
+```typescript
+// What happens:
+setInterval(() => {
+  this.counter.set(this.counter() + 1); // Signal updates
+}, 1000);
+// Signal marks the component for check (explicit marker)
+// → OnPush respects this signal-based marking
+// → Change detection runs
+// → Template {{ counter() }} re-evaluates
+// → DOM updates
+```
+
+**Why it works:** This is the **modern Angular 21 pattern**—signals are the explicit trigger mechanism that OnPush was designed for. No Zone.js needed; signals handle reactivity natively.
+
+---
+
+### Key Insights
+
+| Pattern                       | Works? | Why                             | Best For                            |
+| ----------------------------- | :----: | ------------------------------- | ----------------------------------- |
+| **Plain var + Zone/Default**  |   ✅   | Zone.js magic—catches all async | Legacy code, rapid prototyping      |
+| **Plain var + OnPush**        |   ❌   | No explicit trigger             | N/A—avoid this combo                |
+| **Plain var + Zoneless**      |   ❌   | No CD trigger mechanism         | N/A—use signals instead             |
+| **Signal + Zone/Default**     |   ✅   | Zone.js + signal awareness      | Transition period                   |
+| **Signal + Zone/OnPush**      |   ✅   | Signals mark component dirty    | Modern Angular with Zone.js         |
+| **Signal + Zoneless/Default** |   ❌   | No CD trigger (zone-free limbo) | N/A—avoid this combo                |
+| **Signal + Zoneless/OnPush**  |   ✅   | Signals drive all reactivity    | **Modern Angular 21 (recommended)** |
+
+### Recommendation
+
+For modern Angular 21+ applications:
+
+```typescript
+// ✅ Best Practice: Signals + Zoneless + OnPush
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // Zoneless is configured in main.ts or bootstrapApplication
+  template: `<p>Count: {{ count() }}</p>`,
+})
+export class MyComponent {
+  count = signal(0);
+
+  constructor() {
+    setInterval(() => {
+      this.count.set(this.count() + 1);
+    }, 1000);
+  }
+}
+```
+
+This combination provides:
+
+- ✅ Predictable reactivity (signals drive all updates)
+- ✅ Minimal bundle size (no Zone.js)
+- ✅ Best performance (no unnecessary change detection)
+- ✅ Future-proof (aligned with Angular 21+ direction)

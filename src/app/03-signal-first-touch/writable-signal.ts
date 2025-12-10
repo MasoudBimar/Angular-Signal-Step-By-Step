@@ -20,7 +20,7 @@ import { computed, signal } from "@angular/core";
   const firstSignal = signal(42);
 
   // Reading the value
-  let val = firstSignal();
+  let val1 = firstSignal();
 
   // Binding to the value
   const string = `
@@ -40,7 +40,8 @@ import { computed, signal } from "@angular/core";
   const derived = computed(() => firstSignal() * 2);
 
   // Reading the value
-  let val = derived(); // same as writable
+  const val2 = derived(); // same as writable
+  console.log('Derived Signal Value:', val2);
 
   // Binding to the value
   const binding = `

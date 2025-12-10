@@ -60,7 +60,7 @@ import { RgbDirective } from './rgb.directive';
   styles: [],
   encapsulation: ViewEncapsulation.None,
 })
-export class NxWelcome implements OnInit, AfterViewInit {
+export class SignalAPI implements OnInit, AfterViewInit {
 
   // with required we are sure that the viewChild will be there when we call it
   currencyConverter = viewChild.required(CurrencyConverterComponent);
@@ -73,7 +73,7 @@ export class NxWelcome implements OnInit, AfterViewInit {
 
   /**
    *  component // elementRef // templateRef// viewContainerRef
-   *  In all of these cases we neeed to use a refernce variable in order to use reference variable 
+   *  In all of these cases we neeed to use a refernce variable in order to use reference variable
    *  in order to mark the element that were looking for
    */
 
@@ -112,7 +112,7 @@ export class NxWelcome implements OnInit, AfterViewInit {
 
     // * effects are executed after all the lifecycle hooks are executed
     effect(() => {
-      console.log('Accessing view child required value in effect', this.currencyConverter()); // * This will work 
+      console.log('Accessing view child required value in effect', this.currencyConverter()); // * This will work
     });
   }
 
@@ -128,9 +128,9 @@ export class NxWelcome implements OnInit, AfterViewInit {
 }
 
 
-// ! We know from the classsic angular that 
+// ! We know from the classsic angular that
 // ! Viewchild Query doesn not return value until a lifecycle hook is executed (afterViewInit)
-// ? So while we understand how ViewChild and ViewChildren are implemented, we understand that 
+// ? So while we understand how ViewChild and ViewChildren are implemented, we understand that
 // ? in some points the values are undefined or an empty array
 // ? So the question is how is ViewChildRequired implemented to be sure that the value is there when we call it
 // ! SO when we  that signal with required does not allow undefined values

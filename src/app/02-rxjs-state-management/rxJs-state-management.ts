@@ -1,3 +1,4 @@
+// See `rxjs-state-management.md` in the same directory for full explanation and examples.
 import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, combineLatest, debounceTime, map } from 'rxjs';
@@ -17,7 +18,7 @@ type Options = Partial<Record<OptionKey, string>>;
   styles: [],
   encapsulation: ViewEncapsulation.None,
 })
-export class rxJsStateManagement {
+export class RxJsStateManagement {
   readonly options$ = new BehaviorSubject<Options>({ 'r': 'Red', 'g': 'Green', 'b': 'Blue' });
 
   readonly selectedKey$ = new BehaviorSubject<OptionKey>('b');
@@ -28,13 +29,8 @@ export class rxJsStateManagement {
   );
 
   constructor() {
-    // const keys: OptionKey[] = ['r', 'b', 'g'];
-    // setInterval(() => {
-    //   const idx= Math.floor((Math.random() * 299) / 100);
-    //   console.log(idx);
-    //   this.selectedKey$.next(keys[idx])
-    // }, 1000);
-
+    // NOTE: The demo subscribes here to show the derived value in the console.
+    // In production prefer `async` pipe or a managed subscription with teardown.
     this.selectedValue$.subscribe(console.log);
   }
 
