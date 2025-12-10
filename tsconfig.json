@@ -1,26 +1,27 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "moduleResolution": "bundler",
-    "emitDecoratorMetadata": false,
-    "target": "es2022",
-    "module": "preserve",
-    "lib": ["esnext", "dom"],
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
-    "paths": {
-      "@ng-doc/generated": ["./ng-doc/AngularSignal/index.ts"],
-      "@ng-doc/generated/*": ["./ng-doc/AngularSignal/*"]
-    },
-    "isolatedModules": true
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve"
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "typeCheckHostBindings": true,
     "strictTemplates": true
   },
   "files": [],
-  "include": [],
   "references": [
     {
       "path": "./tsconfig.app.json"
@@ -28,7 +29,5 @@
     {
       "path": "./tsconfig.spec.json"
     }
-  ],
-  "compileOnSave": false,
-  "exclude": ["node_modules", "tmp"]
+  ]
 }

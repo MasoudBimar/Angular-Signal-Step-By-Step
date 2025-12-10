@@ -1,14 +1,12 @@
-import { NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent } from "@ng-doc/app";
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { Component, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-  imports: [NxWelcome, RouterModule, NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent],
   selector: 'app-root',
+  imports: [RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.css',
+  styleUrl: './app.scss'
 })
 export class App {
-  protected title = 'AngularSignal';
+  protected readonly title = signal('Angular21');
 }
