@@ -11,7 +11,7 @@ import { mySignal } from './signal-custom-implementation';
   styles: [],
   encapsulation: ViewEncapsulation.None,
 })
-export class NxWelcome {
+export class StartSignal {
   // Signal is a function that returns a function
 
   // as we know from before it's considered bad practice to call a function inside html template
@@ -26,12 +26,12 @@ export class NxWelcome {
   readonly firstSignal = mySignal(12);
   readonly secondSignal = mySignal('signal');
 
-  setSignal(){
+  setSignal() {
     this.firstSignal.set(10);
   }
 
-  updateSignal(){
-    this.firstSignal.update((value) => value + 1 );
+  updateSignal() {
+    this.firstSignal.update((value) => value + 1);
   }
 
 
