@@ -63,7 +63,7 @@ import { RgbDirective } from './rgb.directive';
 export class SignalAPI implements OnInit, AfterViewInit {
 
   // with required we are sure that the viewChild will be there when we call it
-  currencyConverter = viewChild.required(CurrencyConverterComponent);
+  currencyConverter = viewChild(CurrencyConverterComponent);
   // without required it can be undefined so when we call the method we need to check if it is undefined
   // we need to call it : this.currencyConverter()?.stopRefresh();
   // currencyConverter = viewChild.required(CurrencyConverterComponent);
@@ -88,7 +88,7 @@ export class SignalAPI implements OnInit, AfterViewInit {
 
   stopRefresh() {
     // we dont need to check if it is undefined because we used required
-    this.currencyConverter().stopRefresh();
+    this.currencyConverter()?.stopRefresh();
 
     // for viewChildren we need to loop through the array
     // this.currencyConverters().forEach(c => c.stopRefresh());

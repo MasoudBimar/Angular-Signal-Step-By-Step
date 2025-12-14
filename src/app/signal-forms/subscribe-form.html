@@ -1,0 +1,72 @@
+<div class="wrapper">
+  <div class="flip-card__inner">
+    <div class="flip-card__front">
+      <div class="title">Subscribe Form</div>
+      <p class="card-text">This is a subscribe form using signal-based forms in Angular.</p>
+      <form class="flip-card__form">
+        <div class="row">
+          <label for="firstNameId">First Name: </label>
+          <div class="row-value">
+            <input
+              type="text"
+              class="flip-card__input"
+              id="firstNameId"
+              [field]="subscribeForm.firstName"
+              placeholder="First Name (optional)"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <label for="lastNameId">Last Name: </label>
+          <div class="row-value">
+            <input
+              type="text"
+              class="flip-card__input"
+              id="lastNameId"
+              [field]="subscribeForm.lastName"
+              placeholder="Last Name (optional)"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <label for="emailId">Email: </label>
+          <div class="row-value">
+            <input
+              type="email"
+              class="flip-card__input"
+              id="emailId"
+              [field]="subscribeForm.email"
+              placeholder="Email (optional)"
+            />
+          </div>
+          <br />
+          @if(subscribeForm.email().invalid() && subscribeForm.email().touched()){
+          <div class="alert alert-danger">
+            @for(error of subscribeForm.email().errors(); track error.kind){
+            <div>{{ error.message }}</div>
+            }
+          </div>
+          }
+        </div>
+        <div class="row">
+          <label for="yearsAsFanId">Years As Fan: </label>
+          <div class="row-value">
+            <input
+              type="number"
+              class="flip-card__input"
+              id="yearsAsFanId"
+              [field]="subscribeForm.yearsAsFan"
+              placeholder="Years As Fan (optional)"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-value">
+            <button type="button" class="flip-card__btn">Let`s go!</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
