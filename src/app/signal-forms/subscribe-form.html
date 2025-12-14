@@ -50,6 +50,34 @@
           }
         </div>
         <div class="row">
+          <label for="emailId">Phone: </label>
+          <div class="row-value">
+            <input
+              type="text"
+              class="flip-card__input"
+              id="phoneId"
+              [field]="subscribeForm.phone"
+              placeholder="Phone (optional)"
+            />
+          </div>
+          <br />
+          @if(subscribeForm.phone().invalid() && subscribeForm.phone().touched()){
+          <div class="alert alert-danger">
+            @for(error of subscribeForm.phone().errors(); track error.kind){
+            <div>{{ error.message }}</div>
+            }
+          </div>
+          }
+        </div>
+        <div class="row">
+          <label for="sendViaId">Send Via: </label>
+          <div class="row-value">
+            <input type="checkbox" [field]="subscribeForm.sendViaEmail" class="flip-card__input" />
+
+            <input type="checkbox" class="flip-card__input" [field]="subscribeForm.sendViaText" />
+          </div>
+        </div>
+        <div class="row">
           <label for="yearsAsFanId">Years As Fan: </label>
           <div class="row-value">
             <input
