@@ -1,4 +1,4 @@
-import { email, max, min, minLength, required, schema } from "@angular/forms/signals";
+import { applyWhen, email, max, min, minLength, required, schema } from "@angular/forms/signals";
 
 export interface Subscription { // subscripotion
   firstName: string;
@@ -23,6 +23,9 @@ export const initialData: Subscription = {
   yearsAsFan: NaN
 };
 
+// Another suggestion is using applyWhen
+// Applies a condition to a set of validation rules or a set of fields
+
 export const SubscriptionSchema = schema<Subscription>((rootPath) => {
   required(rootPath.email, {
     message: 'Email is required',
@@ -41,5 +44,16 @@ export const SubscriptionSchema = schema<Subscription>((rootPath) => {
   });
   min(rootPath.yearsAsFan, 0, { message: 'You must be a fan for at least 0 years' });
   max(rootPath.yearsAsFan, 100, { message: 'You must be a fan for at least 100 years' });
-
+  // for using applyWhen first we need to comment the required validator for phone
+  // use applyWhen to apply condition to multiple rules or to effect multiple fields
+  // applyWhen(
+  //   rootPath.phone,
+  //   ({ valueOf }) => valueOf(rootPath.sendViaText) === true,
+  //   (phonePath) => {
+  //     required(phonePath, { message: 'Your cell phone number is required to receive out newsLetter' }),
+  //       minLength(phonePath, 10, {
+  //         message: 'Minimum of 10 digits is required'
+  //       })
+  //   }
+  // )
 });

@@ -30,7 +30,11 @@
         </div>
 
         <div class="row">
-          <label for="emailId">Email: </label>
+          <label for="emailId"
+            >Email: @if(subscribeForm.email().required()){
+            <span class="text-danger">*</span>
+            }
+          </label>
           <div class="row-value">
             <input
               type="email"
@@ -50,7 +54,11 @@
           }
         </div>
         <div class="row">
-          <label for="emailId">Phone: </label>
+          <label for="phoneId"
+            >Phone: @if(subscribeForm.phone().required()){
+            <span class="text-danger">*</span>
+            }
+          </label>
           <div class="row-value">
             <input
               type="text"
