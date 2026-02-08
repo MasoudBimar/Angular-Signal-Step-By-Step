@@ -3,7 +3,6 @@
 - Change Detection Mechanism
 - Change Detection Strategies: Default vs OnPush
 - Best Practices with Change Detection
--
 
 ## Overview
 
@@ -25,7 +24,7 @@ With the **Default** strategy, Angular runs change detection very frequently - e
 
 - So there two categories of events or of occasions which cause the change detection to run when we're on OnPush
 - One of them is when we use Angular's mechanisms such as inputs, outputs or events.
-- Second one is we can manullay cal the change detector by runnign detectchanges() and that will happen as well.
+- Second one is we can manullay call the change detector by runnign detectchanges() and that will happen as well.
 
 ### What triggers Change Detection with OnPush Strategy?
 
@@ -34,6 +33,14 @@ With the **Default** strategy, Angular runs change detection very frequently - e
 - trigger manually by change detector ref
 
 ### What triggers Change Detection with Default Strategy(zone-based)?
+
+In the default strategy, Angular's Zone.js library "monkey-patches" browser APIs to notify the framework when the following occur:
+
+- **User Events**: Any user interaction bound in a template, such as `click`, `submit`, `keydown`.
+- **Asynchronous Requests**: Completion of network requests, such as those made via `HttpClient` (XHR).
+- **Timers**: Execution of setTimeout() or setInterval() callbacks.
+- **Promises/Observables**: The resolution of a Promise.then() or the emission of a value from a subscribed RxJS Observable.
+- **Input Property Changes**: Whenever a parent component passes a new value (primitive or object reference) to a child via an @Input()
 
 Seems like all the time, But how?
 
@@ -56,13 +63,19 @@ Seems like all the time, But how?
 setTimeout(() => {
   /* ... */
 }, 1000);
+
 setInterval(() => {
   /* ... */
 }, 1000);
+
 addEventListener('click', handler);
+
 XMLHttpRequest.send();
+
 Promise.then();
+
 Promise.catch();
+
 queueMicrotask(() => {
   /* ... */
 });
@@ -130,8 +143,8 @@ With **OnPush** strategy, Angular only runs change detection when one of these s
 2. **An Angular event originates from the component** (like `(click)`)
 3. **An observable emits via the async pipe**
 4. **Manual trigger via ChangeDetectorRef.markForCheck()**
-5. Pure pipes only re-run when their inputs change by reference (This works very well with OnPush since Angular doesn’t re-check everything)
-6. Async pipe is almost always the best option for handling observables, because it:
+5. **Pure pipes** only re-run when their inputs change by reference (This works very well with OnPush since Angular doesn’t re-check everything)
+6. **Async pipe** is almost always the best option for handling observables, because it:
    1. Subscribes/unsubscribes automatically
    2. Marks the component for check when new values come in (so you don’t need manual detection)
 
