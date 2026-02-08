@@ -456,7 +456,7 @@ constructor() {
 | ----------------------------------- | :---------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: | :------------------------------------------------------: |
 | **Plain Variable (interpolation)**  |                                            ✅ **Updates**                                             |                                                     ❌ **No Update**                                                      |                                       ❌ **No Update**                                       |                     ❌ **No Update**                     |
 |                                     |         After `setInterval` fires, Zone.js triggers CD → template checks value → DOM updates          | `setInterval` doesn't trigger CD in OnPush without manual marking → template never re-checked → variable change invisible | Without Zone.js, no CD trigger from async → template never re-checked → variable stays stale |    No auto-trigger, no signal → variable stays stale     |
-| **Signal Variable (function call)** |                                            ✅ **Updates**                                             |                                                      ✅ **Updates**                                                       |                                       ❌ **No Update**                                       |                      ✅ **Updates**                      |
+| **Signal Variable (function call)** |                                            ✅ **Updates**                                             |                                                      ✅ **Updates**                                                       |                                       ✅ **Updates**                                       |                      ✅ **Updates**                      |
 |                                     | CD triggers after `setInterval` → template checks signal → signal marks component dirty → DOM updates |                   Signal change marks component for check → CD runs → signal re-evaluates → DOM updates                   |    Without Zone.js and no CD, signal still marks component but no one listens → no update    | Signal marks component for check → CD runs → DOM updates |
 
 ### Detailed Explanations
@@ -581,21 +581,9 @@ setInterval(() => {
 
 #### 7. Signal + Zoneless + Default Strategy
 
-**Result:** ❌ **No updates**
+**Result:** ✅ **Updates**
 
-```typescript
-// What happens:
-setInterval(() => {
-  this.counter.set(this.counter() + 1); // Signal updates
-}, 1000);
-// Without Zone.js, no one tells Angular to run CD
-// Signal marks the component, but no one is listening
-// → Change detection never runs
-// → Template never re-evaluates
-// → Variable stays stale
-```
-
-**Why it fails:** Without Zone.js, there's no trigger mechanism, and signals alone can't auto-start CD.
+In zoneless mode, signals themselves are one of the mechanisms that schedule change detection for dependents; plain async like setInterval does not.
 
 ---
 
@@ -628,7 +616,7 @@ setInterval(() => {
 | **Plain var + Zoneless**      |   ❌   | No CD trigger mechanism         | N/A—use signals instead             |
 | **Signal + Zone/Default**     |   ✅   | Zone.js + signal awareness      | Transition period                   |
 | **Signal + Zone/OnPush**      |   ✅   | Signals mark component dirty    | Modern Angular with Zone.js         |
-| **Signal + Zoneless/Default** |   ❌   | No CD trigger (zone-free limbo) | N/A—avoid this combo                |
+| **Signal + Zoneless/Default** |   ✅   | Signals drive all reactivity    | **Modern Angular 21 (recommended)** |
 | **Signal + Zoneless/OnPush**  |   ✅   | Signals drive all reactivity    | **Modern Angular 21 (recommended)** |
 
 ### Recommendation
