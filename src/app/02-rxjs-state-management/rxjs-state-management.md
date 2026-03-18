@@ -1,6 +1,6 @@
 # RxJS State Management
 
-This document explains the small demonstration in `rxJs-state-management.ts` and shows the ideas behind using RxJS for local component state.
+This document explains the small demonstration in `rxjs-state-management.ts` and shows the ideas behind using RxJS for local component state.
 
 ## Goals
 
@@ -70,4 +70,4 @@ function switchOptions() {
 
 ---
 
-See the component `rxJs-state-management.ts` for the minimal runnable example that inspired this document.
+See the component `rxjs-state-management.ts` for the minimal runnable example that inspired this document.
