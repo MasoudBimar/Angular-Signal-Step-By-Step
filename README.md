@@ -2,7 +2,7 @@
 
 A comprehensive learning guide for mastering **Angular Signals** with the latest version of Angular (v21). This repository provides practical examples and patterns for modern Angular development using signals, standalone components, and reactive programming.
 
-## About This Project
+## About Angular-Signal-Step-By-Step Project
 
 This project demonstrates:
 
