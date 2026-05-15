@@ -1,108 +1,101 @@
-<div class="wrapper">
-  <div class="flip-card__inner">
-    <div class="flip-card__front">
-      <div class="title">Subscribe Form</div>
-      <p class="card-text">This is a subscribe form using signal-based forms in Angular.</p>
-      <form class="flip-card__form">
-        <div class="row">
-          <label for="firstNameId">First Name: </label>
-          <div class="row-value">
-            <input
-              type="text"
-              class="flip-card__input"
-              id="firstNameId"
-              [field]="subscribeForm.firstName"
-              placeholder="First Name (optional)"
-            />
-          </div>
-        </div>
-        <div class="row">
-          <label for="lastNameId">Last Name: </label>
-          <div class="row-value">
-            <input
-              type="text"
-              class="flip-card__input"
-              id="lastNameId"
-              [field]="subscribeForm.lastName"
-              placeholder="Last Name (optional)"
-            />
-          </div>
-        </div>
-
-        <div class="row">
-          <label for="emailId"
-            >Email: @if(subscribeForm.email().required()){
+<section class="layout-shell">
+  <header class="layout-header">
+    <p class="eyebrow">Form using signal form API</p>
+    <h2 class="layout-subtext">Subscribe Form</h2>
+    <p class="card-text">This is a subscribe form using signal-based forms in Angular.</p>
+  </header>
+  <div class="layout-grid">
+    <form class="reactive-form">
+      <label class="field" for="firstNameId">
+        <span>First Name:</span>
+        <input
+          type="text"
+          class="form-control"
+          id="firstNameId"
+          [formField]="subscribeForm.firstName"
+          placeholder="First Name (optional)"
+        />
+      </label>
+      <label class="field" for="lastNameId">
+        <span>Last Name: </span>
+        <input
+          type="text"
+          class="form-control"
+          id="lastNameId"
+          [formField]="subscribeForm.lastName"
+          placeholder="Last Name (optional)"
+        />
+      </label>
+      <label class="field" for="emailId">
+        <span>
+          Email:
+          @if (subscribeForm.email().required()) {
             <span class="text-danger">*</span>
-            }
-          </label>
-          <div class="row-value">
-            <input
-              type="email"
-              class="flip-card__input"
-              id="emailId"
-              [field]="subscribeForm.email"
-              placeholder="Email (optional)"
-            />
-          </div>
-          <br />
-          @if(subscribeForm.email().invalid() && subscribeForm.email().touched()){
-          <div class="alert alert-danger">
-            @for(error of subscribeForm.email().errors(); track error.kind){
-            <div>{{ error.message }}</div>
-            }
-          </div>
           }
-        </div>
-        <div class="row">
-          <label for="phoneId"
-            >Phone: @if(subscribeForm.phone().required()){
-            <span class="text-danger">*</span>
-            }
-          </label>
-          <div class="row-value">
-            <input
-              type="text"
-              class="flip-card__input"
-              id="phoneId"
-              [field]="subscribeForm.phone"
-              placeholder="Phone (optional)"
-            />
-          </div>
-          <br />
-          @if(subscribeForm.phone().invalid() && subscribeForm.phone().touched()){
-          <div class="alert alert-danger">
-            @for(error of subscribeForm.phone().errors(); track error.kind){
-            <div>{{ error.message }}</div>
-            }
-          </div>
-          }
-        </div>
-        <div class="row">
-          <label for="sendViaId">Send Via: </label>
-          <div class="row-value">
-            <input type="checkbox" [field]="subscribeForm.sendViaEmail" class="flip-card__input" />
+        </span>
 
-            <input type="checkbox" class="flip-card__input" [field]="subscribeForm.sendViaText" />
+        <input
+          type="email"
+          class="form-control"
+          id="emailId"
+          [formField]="subscribeForm.email"
+          placeholder="Email (optional)"
+        />
+        <br />
+        @if (subscribeForm.email().invalid() && subscribeForm.email().touched()) {
+          <div class="alert alert-danger">
+            @for (error of subscribeForm.email().errors(); track error.kind) {
+              <div>{{ error.message }}</div>
+            }
           </div>
-        </div>
-        <div class="row">
-          <label for="yearsAsFanId">Years As Fan: </label>
-          <div class="row-value">
-            <input
-              type="number"
-              class="flip-card__input"
-              id="yearsAsFanId"
-              [field]="subscribeForm.yearsAsFan"
-              placeholder="Years As Fan (optional)"
-            />
+        }
+      </label>
+
+      <label class="field" for="phoneId">
+        <span>
+          Phone:
+          @if (subscribeForm.phone().required()) {
+            <span class="text-danger">*</span>
+          }
+        </span>
+
+        <input
+          type="text"
+          class="form-control"
+          id="phoneId"
+          [formField]="subscribeForm.phone"
+          placeholder="Phone (optional)"
+        />
+        <br />
+        @if (subscribeForm.phone().invalid() && subscribeForm.phone().touched()) {
+          <div class="alert alert-danger">
+            @for (error of subscribeForm.phone().errors(); track error.kind) {
+              <div>{{ error.message }}</div>
+            }
           </div>
+        }
+      </label>
+      <label class="field" for="sendViaId">
+        <span> Send Via: </span>
+        <input type="checkbox" [formField]="subscribeForm.sendViaEmail" class="flip-card__input" />
+
+        <input type="checkbox" class="flip-card__input" [formField]="subscribeForm.sendViaText" />
+      </label>
+      <label class="field" for="yearsAsFanId">
+        <span> Years As Fan: </span>
+        <input
+          type="number"
+          class="form-control"
+          id="yearsAsFanId"
+          [formField]="subscribeForm.yearsAsFan"
+          placeholder="Years As Fan (optional)"
+        />
+      </label>
+      <div class="row">
+        <div class="row-value">
+          <button type="button" class="flip-card__btn">Let`s go!</button>
         </div>
-        <div class="row">
-          <div class="row-value">
-            <button type="button" class="flip-card__btn">Let`s go!</button>
-          </div>
-        </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
-</div>
+</section>

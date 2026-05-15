@@ -1,8 +1,42 @@
 # Change Detection in Angular
 
-- Change Detection Mechanism
-- Change Detection Strategies: Default vs OnPush
-- Best Practices with Change Detection
+- [Change Detection in Angular](#change-detection-in-angular)
+  - [Overview](#overview)
+  - [How Change Detection Works](#how-change-detection-works)
+    - [Default Change Detection Strategy](#default-change-detection-strategy)
+    - [What triggers Change Detection with OnPush Strategy?](#what-triggers-change-detection-with-onpush-strategy)
+    - [What triggers Change Detection with Default Strategy(zone-based)?](#what-triggers-change-detection-with-default-strategyzone-based)
+  - [OnPush Change Detection Strategy](#onpush-change-detection-strategy)
+  - [Triggers for OnPush Change Detection](#triggers-for-onpush-change-detection)
+  - [Comparison: Default vs OnPush](#comparison-default-vs-onpush)
+  - [Best Practices with Change Detection](#best-practices-with-change-detection)
+    - [1. Use OnPush for Better Performance](#1-use-onpush-for-better-performance)
+    - [2. Use Async Pipe with Observables](#2-use-async-pipe-with-observables)
+    - [3. Manual Detection When Needed](#3-manual-detection-when-needed)
+    - [4. Use Pure Pipes](#4-use-pure-pipes)
+  - [Why Use OnPush with Signals?](#why-use-onpush-with-signals)
+  - [Key Takeaways](#key-takeaways)
+  - [Things Changed in Angular 21](#things-changed-in-angular-21)
+    - [Key Implications for Developers](#key-implications-for-developers)
+      - [Before Angular 21 (Zone-based)](#before-angular-21-zone-based)
+      - [Angular 21 (Zoneless + Signals)](#angular-21-zoneless--signals)
+    - [Migration Benefits](#migration-benefits)
+    - [Migration Challenges](#migration-challenges)
+  - [Conclusion](#conclusion)
+  - [Behavior Comparison: Variables vs Signals Across Strategies](#behavior-comparison-variables-vs-signals-across-strategies)
+    - [Scenario Setup](#scenario-setup)
+    - [Comprehensive Behavior Table](#comprehensive-behavior-table)
+    - [Detailed Explanations](#detailed-explanations)
+      - [1. Plain Variable + Zone.js + Default Strategy](#1-plain-variable--zonejs--default-strategy)
+      - [2. Plain Variable + Zone.js + OnPush Strategy](#2-plain-variable--zonejs--onpush-strategy)
+      - [3. Plain Variable + Zoneless + Default Strategy](#3-plain-variable--zoneless--default-strategy)
+      - [4. Plain Variable + Zoneless + OnPush Strategy](#4-plain-variable--zoneless--onpush-strategy)
+      - [5. Signal + Zone.js + Default Strategy](#5-signal--zonejs--default-strategy)
+      - [6. Signal + Zone.js + OnPush Strategy](#6-signal--zonejs--onpush-strategy)
+      - [7. Signal + Zoneless + Default Strategy](#7-signal--zoneless--default-strategy)
+      - [8. Signal + Zoneless + OnPush Strategy](#8-signal--zoneless--onpush-strategy)
+    - [Key Insights](#key-insights)
+    - [Recommendation](#recommendation)
 
 ## Overview
 

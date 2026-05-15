@@ -1,13 +1,13 @@
 import { Component, effect, signal } from "@angular/core";
 import { Subscription, SubscriptionSchema, initialData } from "./subscription";
 import { Form } from "@angular/forms";
-import { Field, form } from "@angular/forms/signals";
+import { FormField, form } from "@angular/forms/signals";
 
 @Component({
   selector: 'app-subscribe-form',
   templateUrl: './subscribe-form.html',
   styleUrl: './subscribe-form.scss',
-  imports: [Field]
+  imports: [FormField]
 })
 export class SubscribeForm {
 
