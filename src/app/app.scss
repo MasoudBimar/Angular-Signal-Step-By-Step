@@ -1,0 +1,48 @@
+.active {
+  background-color: red !important;
+}
+
+.app-layout {
+  /* Constrain the overall layout to the viewport and keep outer page from scrolling */
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-sidebar {
+  align-self: stretch;
+  flex: 0 0 280px;
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.app-content {
+  /* Let the parent flex container determine height instead of forcing 100vh */
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  padding: 24px;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.content-shell {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 10px;
+  min-height: 0;
+  flex: 1 1 auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  font-family: "Space Grotesk", "Trebuchet MS", "Gill Sans", "Calibri", sans-serif;
+  // display: block;
+  padding: 28px 18px 40px;
+  color: #0f172a;
+}

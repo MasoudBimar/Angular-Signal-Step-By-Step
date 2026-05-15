@@ -1,2 +1,8 @@
-<app-subscribe-form></app-subscribe-form>
-<router-outlet />
+<div class="app-layout d-flex min-vh-100">
+  <app-sidebar class="app-sidebar"></app-sidebar>
+  <main class="app-content flex-grow-1">
+    <div class="content-shell">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
