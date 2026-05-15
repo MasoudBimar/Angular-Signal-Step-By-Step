@@ -1,0 +1,101 @@
+<div class="sidebar d-flex flex-column flex-shrink-0 p-3">
+  <a
+    href="/"
+    class="sidebar-brand d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none"
+    >
+    <span class="fs-6">Angular Signal Step by Step</span>
+  </a>
+  <hr />
+  <nav class="sidebar-nav flex-grow-1">
+    <div class="accordion accordion-flush" id="sidebarAccordion">
+      @for (item of menuItems; track item) {
+        <div class="accordion-item bg-transparent border-0">
+          @if (item.children?.length) {
+            <h2 class="accordion-header d-flex align-items-center justify-content-between gap-2">
+              @if (item.route) {
+                <a
+                  class="nav-link flex-grow-1 p-0"
+                  [routerLink]="item.route"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  >
+                  {{ item.label }}
+                </a>
+              } @else {
+                <button
+                  type="button"
+                  class="accordion-button collapsed w-100"
+                  (click)="toggle(item)"
+                  [attr.aria-expanded]="isExpanded(item)"
+                  [attr.aria-controls]="'sidebar-group-' + item.id"
+                  >
+                  {{ item.label }}
+                </button>
+              }
+              <button
+                type="button"
+                class="btn btn-sm btn-link text-decoration-none"
+                (click)="toggle(item)"
+                [attr.aria-expanded]="isExpanded(item)"
+                [attr.aria-controls]="'sidebar-group-' + item.id"
+                >
+                <span [class.rotate-180]="isExpanded(item)">▾</span>
+              </button>
+            </h2>
+            <div
+              class="accordion-collapse collapse"
+              [class.show]="isExpanded(item)"
+              [attr.id]="'sidebar-group-' + item.id"
+              >
+              <div class="accordion-body p-0">
+                <ul class="nav nav-pills flex-column mb-2">
+                  @for (child of item.children; track child) {
+                    <li class="nav-item">
+                      <a
+                        class="nav-link"
+                        [routerLink]="child.route"
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        >
+                        {{ child.label }}
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </div>
+            </div>
+          } @else if (item.route) {
+            <h2 class="accordion-header">
+              <a
+                class="nav-link"
+                [routerLink]="item.route"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                >
+                {{ item.label }}
+              </a>
+            </h2>
+          }
+        </div>
+      }
+    </div>
+  </nav>
+  <hr />
+  <div>
+    <a
+      href="https://github.com/MasoudBimar"
+      target="_blank"
+      class="sidebar-footer d-flex align-items-center text-decoration-none"
+      aria-expanded="false"
+      >
+      <img
+        src="https://avatars.githubusercontent.com/u/13163778?v=4&size=128"
+        alt=""
+        width="32"
+        height="32"
+        class="rounded-circle me-2"
+        />
+      <strong>Masoud Bimmer's Github</strong>
+    </a>
+  </div>
+</div>
