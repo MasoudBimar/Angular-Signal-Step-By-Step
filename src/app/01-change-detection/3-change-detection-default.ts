@@ -6,21 +6,20 @@ import { interval } from 'rxjs';
   selector: 'app-nx-welcome',
   imports: [CommonModule],
   template: `
-              <h1>Counter (async) = {{counter$ | async}}</h1>
-              <h2>Normal Counter = {{normalConter}}</h2>
+<h1>Counter (async) = {{counter$ | async}}</h1>
+<h2>Normal Counter = {{normalConter}}</h2>
 
-              <h2>{{calculateValue()}}</h2>
+<h2>{{calculateValue()}}</h2>
 
-              <button (click)="justNothing()">do nothing</button>
+<button (click)="justNothing()">do nothing</button>
 
-  `,
+`,
   styles: [],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
-export class ChangeDetectionSampleOnPush {
+export class ChangeDetectionSampleDefault {
   readonly counter$ = interval(1000);
   protected normalConter = 0;
-  private readonly cdr = inject(ChangeDetectorRef);
 
   calculateValue() {
     console.log('Value is calculated');
@@ -32,9 +31,7 @@ export class ChangeDetectionSampleOnPush {
       this.normalConter++;
     }, 1000);
 
-    setInterval(() => {
-      this.cdr.detectChanges(); // manually call the change detector
-    }, 3000);
+
   }
 
   justNothing() {

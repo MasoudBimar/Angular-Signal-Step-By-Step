@@ -10,10 +10,6 @@
   - [Triggers for OnPush Change Detection](#triggers-for-onpush-change-detection)
   - [Comparison: Default vs OnPush](#comparison-default-vs-onpush)
   - [Best Practices with Change Detection](#best-practices-with-change-detection)
-    - [1. Use OnPush for Better Performance](#1-use-onpush-for-better-performance)
-    - [2. Use Async Pipe with Observables](#2-use-async-pipe-with-observables)
-    - [3. Manual Detection When Needed](#3-manual-detection-when-needed)
-    - [4. Use Pure Pipes](#4-use-pure-pipes)
   - [Why Use OnPush with Signals?](#why-use-onpush-with-signals)
   - [Key Takeaways](#key-takeaways)
   - [Things Changed in Angular 21](#things-changed-in-angular-21)
@@ -26,17 +22,6 @@
   - [Behavior Comparison: Variables vs Signals Across Strategies](#behavior-comparison-variables-vs-signals-across-strategies)
     - [Scenario Setup](#scenario-setup)
     - [Comprehensive Behavior Table](#comprehensive-behavior-table)
-    - [Detailed Explanations](#detailed-explanations)
-      - [1. Plain Variable + Zone.js + Default Strategy](#1-plain-variable--zonejs--default-strategy)
-      - [2. Plain Variable + Zone.js + OnPush Strategy](#2-plain-variable--zonejs--onpush-strategy)
-      - [3. Plain Variable + Zoneless + Default Strategy](#3-plain-variable--zoneless--default-strategy)
-      - [4. Plain Variable + Zoneless + OnPush Strategy](#4-plain-variable--zoneless--onpush-strategy)
-      - [5. Signal + Zone.js + Default Strategy](#5-signal--zonejs--default-strategy)
-      - [6. Signal + Zone.js + OnPush Strategy](#6-signal--zonejs--onpush-strategy)
-      - [7. Signal + Zoneless + Default Strategy](#7-signal--zoneless--default-strategy)
-      - [8. Signal + Zoneless + OnPush Strategy](#8-signal--zoneless--onpush-strategy)
-    - [Key Insights](#key-insights)
-    - [Recommendation](#recommendation)
 
 ## Overview
 
@@ -65,6 +50,13 @@ With the **Default** strategy, Angular runs change detection very frequently - e
 - inputs
 - angular events
 - trigger manually by change detector ref
+
+Lets Imagine a scenario where we have a component with OnPush strategy and we have a setInterval that updates a variable every second, in this case the change detection will not run because there is no trigger for it, So lets examine a three event that can trigger the change detection in this case:
+
+1. we have a button in the template and we bind a click event to it, so when we click on the button the change detection will run because it's an angular event.
+2. we can call the change detector manually using `ChangeDetectorRef` by calling detectChanges() method and that will trigger the change detection as well.
+3. if the component has an input and the parent component pass a new value to it, that will trigger the change detection as well.
+
 
 ### What triggers Change Detection with Default Strategy(zone-based)?
 
@@ -262,7 +254,7 @@ export class ChangeDetectionSampleOnPush {
 
 ## Best Practices with Change Detection
 
-### 1. Use OnPush for Better Performance
+**1. Use OnPush for Better Performance**
 
 ```typescript
 @Component({
@@ -275,7 +267,7 @@ export class UserCardComponent {
 }
 ```
 
-### 2. Use Async Pipe with Observables
+**2. Use Async Pipe with Observables**
 
 ```typescript
 @Component({
@@ -291,7 +283,7 @@ export class UserComponent {
 }
 ```
 
-### 3. Manual Detection When Needed
+**3. Manual Detection When Needed**
 
 ```typescript
 export class DataTableComponent implements OnInit {
@@ -308,7 +300,7 @@ export class DataTableComponent implements OnInit {
 }
 ```
 
-### 4. Use Pure Pipes
+**4. Use Pure Pipes**
 
 Pure pipes only re-evaluate when their inputs change by reference, which works perfectly with OnPush:
 
@@ -493,9 +485,9 @@ constructor() {
 | **Signal Variable (function call)** |                                            ✅ **Updates**                                             |                                                      ✅ **Updates**                                                       |                                       ✅ **Updates**                                       |                      ✅ **Updates**                      |
 |                                     | CD triggers after `setInterval` → template checks signal → signal marks component dirty → DOM updates |                   Signal change marks component for check → CD runs → signal re-evaluates → DOM updates                   |    Without Zone.js and no CD, signal still marks component but no one listens → no update    | Signal marks component for check → CD runs → DOM updates |
 
-### Detailed Explanations
+**Detailed Explanations**
 
-#### 1. Plain Variable + Zone.js + Default Strategy
+1. Plain Variable + Zone.js + Default Strategy
 
 **Result:** ✅ **Updates every second**
 
@@ -514,7 +506,7 @@ setInterval(() => {
 
 ---
 
-#### 2. Plain Variable + Zone.js + OnPush Strategy
+2. Plain Variable + Zone.js + OnPush Strategy
 
 **Result:** ❌ **No updates**
 
@@ -535,7 +527,7 @@ setInterval(() => {
 
 ---
 
-#### 3. Plain Variable + Zoneless + Default Strategy
+3. Plain Variable + Zoneless + Default Strategy
 
 **Result:** ❌ **No updates**
 
@@ -554,7 +546,7 @@ setInterval(() => {
 
 ---
 
-#### 4. Plain Variable + Zoneless + OnPush Strategy
+4. Plain Variable + Zoneless + OnPush Strategy
 
 **Result:** ❌ **No updates**
 
@@ -573,7 +565,7 @@ setInterval(() => {
 
 ---
 
-#### 5. Signal + Zone.js + Default Strategy
+5. Signal + Zone.js + Default Strategy
 
 **Result:** ✅ **Updates every second**
 
@@ -593,7 +585,7 @@ setInterval(() => {
 
 ---
 
-#### 6. Signal + Zone.js + OnPush Strategy
+6. Signal + Zone.js + OnPush Strategy
 
 **Result:** ✅ **Updates every second**
 
@@ -613,7 +605,7 @@ setInterval(() => {
 
 ---
 
-#### 7. Signal + Zoneless + Default Strategy
+7. Signal + Zoneless + Default Strategy
 
 **Result:** ✅ **Updates**
 
@@ -621,7 +613,7 @@ In zoneless mode, signals themselves are one of the mechanisms that schedule cha
 
 ---
 
-#### 8. Signal + Zoneless + OnPush Strategy
+8. Signal + Zoneless + OnPush Strategy
 
 **Result:** ✅ **Updates every second**
 
@@ -641,7 +633,7 @@ setInterval(() => {
 
 ---
 
-### Key Insights
+**Key Insights**
 
 | Pattern                       | Works? | Why                             | Best For                            |
 | ----------------------------- | :----: | ------------------------------- | ----------------------------------- |
@@ -653,7 +645,7 @@ setInterval(() => {
 | **Signal + Zoneless/Default** |   ✅   | Signals drive all reactivity    | **Modern Angular 21 (recommended)** |
 | **Signal + Zoneless/OnPush**  |   ✅   | Signals drive all reactivity    | **Modern Angular 21 (recommended)** |
 
-### Recommendation
+**Recommendation**
 
 For modern Angular 21+ applications:
 
