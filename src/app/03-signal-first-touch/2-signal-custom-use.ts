@@ -12,15 +12,7 @@ import { mySignal } from './signal-custom-implementation';
   encapsulation: ViewEncapsulation.None,
 })
 export class StartSignal {
-  // Signal is a function that returns a function
 
-  // as we know from before it's considered bad practice to call a function inside html template
-  // why is the entire paradime is based on calling function specially in template to getting the current value
-  // The answer is relying on change detection, when we use automatic change detection these functions are executed way to many times
-  // with signals we sopposed to use signal change detection not even onpush (with zoneless change detection)
-
-  // readonly firstSignal = signal(12);
-  // readonly secondSignal = signal('signal');
 
   // trying to use my own signal
   readonly firstSignal = mySignal(12);
