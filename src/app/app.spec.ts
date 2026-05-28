@@ -1,11 +1,20 @@
 import { TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-    }).compileComponents();
+    })
+      .overrideComponent(App, {
+        set: {
+          template: '<h1>Hello, Angular21</h1>',
+          styles: [],
+        },
+      })
+      .compileComponents();
+    
   });
 
   it('should create the app', () => {

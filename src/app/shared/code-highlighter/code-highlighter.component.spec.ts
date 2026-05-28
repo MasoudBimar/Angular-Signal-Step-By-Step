@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CodeHighlighterComponent } from './code-highlighter.component';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('CodeHighlighterComponent', () => {
   let component: CodeHighlighterComponent;

@@ -41,22 +41,47 @@ With the **Default** strategy, Angular runs change detection very frequently - e
 - If user trigger an angular event like (click) the same CI process will happen
 - If there is a async pipe the pipe will trigger the change detection process
 
-- So there two categories of events or of occasions which cause the change detection to run when we're on OnPush
-- One of them is when we use Angular's mechanisms such as inputs, outputs or events.
-- Second one is we can manullay call the change detector by runnign detectchanges() and that will happen as well.
+There are two categories of events or of occasions which cause the change detection to run when we're on OnPush
+- When we use Angular's mechanisms such as inputs, outputs or events.
+- Manullay call the change detector by runnign detectchanges() and that will happen as well.
 
 ### What triggers Change Detection with OnPush Strategy?
 
-- inputs
-- angular events
-- trigger manually by change detector ref
+- Inputs
+- Angular Events
+- Trigger manually by change detector ref
 
-Lets Imagine a scenario where we have a component with OnPush strategy and we have a setInterval that updates a variable every second, in this case the change detection will not run because there is no trigger for it, So lets examine a three event that can trigger the change detection in this case:
+Lets Imagine a scenario where we have a component with OnPush strategy and we have a setInterval that updates a variable every second, in this case the change detection will not run because there is no trigger for it.
 
-1. we have a button in the template and we bind a click event to it, so when we click on the button the change detection will run because it's an angular event.
-2. we can call the change detector manually using `ChangeDetectorRef` by calling detectChanges() method and that will trigger the change detection as well.
-3. if the component has an input and the parent component pass a new value to it, that will trigger the change detection as well.
+So lets examine a three event that can trigger the change detection in this case:
 
+1. We have a button in the template and we bind a click event to it, so when we click on the button the change detection will run because it's an angular event.
+2. Wwe can call the change detector manually using `ChangeDetectorRef` by calling detectChanges() method and that will trigger the change detection as well.
+3. If the component has an input and the parent component pass a new value to it, that will trigger the change detection as well.
+
+```ts
+ @component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <p>Counter: {{ counter }}</p>
+    <button (click)="justNothing()">do nothing</button>
+  `,
+ })
+ export class MyComponent {
+  @Input() counter: any;
+
+  constructor(private cdr: ChangeDetectorRef) {
+    setInterval(() => {
+      this.counter++; // This does NOT trigger change detection
+      // To trigger it manually:
+      // this.cdr.detectChanges();
+    }, 1000);
+  }
+  justNothing() {
+    // Clicking this DOES trigger change detection (Angular event)
+  }
+ }
+```
 
 ### What triggers Change Detection with Default Strategy(zone-based)?
 
@@ -131,7 +156,7 @@ export class ChangeDetectionSampleDefault {
   protected normalCounter = 0;
 
   calculateValue() {
-    console.log('Value is calculated');
+    console.log('Value is calculated');// This will be called very frequently, even when not needed
     return 42;
   }
 

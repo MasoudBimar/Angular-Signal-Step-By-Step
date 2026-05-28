@@ -21,7 +21,7 @@ export class CodeHighlighterComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.codeBlock) {
-      let code = this.code || this.el.nativeElement.innerText;
+      let code = this.code ?? this.el.nativeElement.innerText ?? '';
       code = this.fixIndent(code);
       const grammar = Prism.languages[this.language];
       const html = Prism.highlight(code, grammar, this.language);
@@ -30,6 +30,7 @@ export class CodeHighlighterComponent implements AfterViewInit {
   }
 
   private fixIndent(code: string): string {
+    if (!code) return '';
     const removeThis = (code.match(/^([ ]+)/) || [])[1];
     if (removeThis) {
       const re = new RegExp(`^${removeThis}`, 'gm');
