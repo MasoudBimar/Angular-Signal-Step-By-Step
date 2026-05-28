@@ -1,7 +1,7 @@
 import { Component, DestroyRef, effect, EffectRef, inject, Injector, OnInit, runInInjectionContext, signal, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { interval } from 'rxjs';
-import { startCounting } from './app.util';
+import { startCounting } from './2-passing-injection-context';
 
 /**
  * Reactive Context (synchronous)
@@ -32,7 +32,7 @@ import { startCounting } from './app.util';
     styles: [],
     encapsulation: ViewEncapsulation.None,
 })
-export class SignalAndInjection {
+export class SignalAndInjectionContext {
     readonly destroyRef = inject(DestroyRef);
     private injector = inject(Injector);
     readonly value = signal(0);
@@ -61,7 +61,7 @@ export class SignalAndInjection {
         })
 
         // how to fix the error
-        // we can iject the injector and
+        // we can inject the injector
 
         effect(() => {
             console.log('heyyyyyyyyy', this.value())
@@ -69,7 +69,7 @@ export class SignalAndInjection {
 
         // *****************************
         // we can only create effect inside the injection context
-        // or where we have access to th einjector and we can provide the injectory for effect
+        // or where we have access to the injector and we can provide the injector for effect
 
 
         // *************************************

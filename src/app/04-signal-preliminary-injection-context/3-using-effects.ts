@@ -13,7 +13,7 @@ import { Component, computed, effect, signal } from '@angular/core';
     }
   `,
 })
-export class AppComponent {
+export class UsingEffect {
   readonly x = signal(10);
 
   // bad practice to use effect  to write to a signal
@@ -35,7 +35,9 @@ export class AppComponent {
         // after an async operation there is another task(the rest isnt in reactive context)
         // so the effect function is complete here
         // bad practice to use effect  to write to a signal
-        this.isLarge.set(true);
+        this.isLarge.set(true); // without async/await above : NG0600 writing to signals is not allowed in a computed or an effect be default
+        // with async/await above there is no error, because async function will be compiled to two function with two phase
+      
       }
     }, {
       // allowSignalWrites: true

@@ -21,6 +21,7 @@ import { CommonModule } from '@angular/common';
               <!-- it's automatically subscribe and unsubscribe from signals-->
               <!-- The effect is execute initially then whenever any of them changes it will re-executed -->
               <!-- if we have change in more than one signal, it runs once, it accumolate the changes in signals -->
+              <!-- so if we change the signal multiple time in a period the effect will run once with the latest value -->
 
               <!-- it's OK to Use more than one signal in effect -->
               <!-- it's OK to Use writable or computed signals  in effect -->
@@ -31,7 +32,7 @@ import { CommonModule } from '@angular/common';
   styles: [],
   encapsulation: ViewEncapsulation.None,
 })
-export class NxWelcome {
+export class ComputedSignalAndEffect {
   readonly firstSignal = signal(42);
   readonly secondSignal = signal(42);
   readonly thirdSignal = signal(10);

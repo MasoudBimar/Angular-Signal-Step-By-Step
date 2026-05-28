@@ -34,19 +34,24 @@ import { CommonModule } from '@angular/common';
   styles: [],
   encapsulation: ViewEncapsulation.None,
 })
-export class NxWelcome {
+export class RxJsInteroperability {
   readonly injector = inject(Injector);
+  readonly api = inject(ApiService);
   readonly number = signal(10);
-  readonly number$ = toObservable(this.number); // when the effect destoys the replaySubject also is destroyed
+  readonly number$ = toObservable(this.number); // when the effect destroys the replaySubject also is destroyed
 
   readonly results$ = this.number$.pipe(
     switchMap(n => this.api.getPrimeFactors(n))
   )
 
-  readonly api = inject(ApiService);
 
   // call here because we are in an injection context
+  // when using toSignal it always add '| undefined' to the return type
+  // because signals always have values but observables not so to get rid of undefined good solution is 
+  // using default value to the newly created signal
+  // is we are sure that observable has initial value we can use requireSync: true
   readonly primeFactors = toSignal(this.results$, { initialValue: [], 
+    // requireSync: true
     // injector: this.injector
     // manualCleanup: true // we can use manual cleanup to avoid passing the injector
     // if we are so sure that the observable will complete by itself in a proper time
