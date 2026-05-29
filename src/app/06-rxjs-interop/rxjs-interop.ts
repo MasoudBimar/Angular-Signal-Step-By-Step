@@ -1,21 +1,19 @@
 import {
-  ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
-  signal,
-  ViewEncapsulation,
-  OnInit,
   Injector,
+  OnInit,
+  signal,
+  ViewEncapsulation
 } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ApiService } from './api.service';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { ApiService } from './api.service';
 
 @Component({
   selector: 'app-nx-welcome',
-  imports: [CommonModule],
+  imports: [],
   template: `
     <button (click)="increase()">+</button>
     {{ number() }}
@@ -31,6 +29,7 @@ import { CommonModule } from '@angular/common';
 export class RxJsInteroperability implements OnInit {
   readonly injector = inject(Injector);
   readonly api = inject(ApiService);
+  readonly destroyRef = inject(DestroyRef);
   readonly number = signal(10);
   readonly number$ = toObservable(this.number); // when the effect destroys the replaySubject also is destroyed
 
@@ -56,7 +55,7 @@ export class RxJsInteroperability implements OnInit {
   constructor() {
     // we immediately get the current value of the signal because of the replaySubject
     // and only one value is cashed
-    this.number$.subscribe((n) => {
+    this.number$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((n) => {
       console.log('Number changed to', n);
     });
   }

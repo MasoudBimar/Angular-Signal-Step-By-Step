@@ -38,6 +38,12 @@ body {
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.app-snackbar-error {
+  --mat-snack-bar-container-color: #b42318;
+  --mat-snack-bar-supporting-text-color: #ffffff;
+  --mat-snack-bar-button-color: #ffe7e4;
+}
+
 .layout-shell {
   background: rgba(255, 255, 255, 0.88);
   border-radius: 22px;
