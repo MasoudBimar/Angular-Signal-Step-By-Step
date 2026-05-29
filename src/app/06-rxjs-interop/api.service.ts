@@ -5,14 +5,17 @@ import { delay, map, Observable, of } from "rxjs";
     providedIn: 'root'
 })
 export class ApiService {
+  
     getPrimeFactors(n: number): Observable<number[]> {
         return of(n).pipe(
             delay(1000), 
-            map(getPrimeFactors)
+            map(getPrimeFactors) // map(n => getPrimeFactors(n))
         )
     }
 }
-
+/**
+ * Find the prime factors of n
+ */
 function getPrimeFactors(n: number): number[] {
     const factors: number[] = [];
     let divisor = 2;

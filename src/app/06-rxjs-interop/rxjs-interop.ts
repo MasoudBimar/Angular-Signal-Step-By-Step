@@ -4,21 +4,7 @@ import { ApiService } from './api.service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
-/**
- *  ToObservable creates an observable which tracks the value of a signal
- *  toObservable is an effect that runs whenever the signal changes
- *  underneath it uses a replaySubject to update the observable, 
- *  so that stores in memory the latest value of the signal
- *  --------------------------------------------------------------------------
- * ToSignal creates a signal which tracks the value of an observable
- *  its subscribe to the observable and updates the signal whenever the observable emits a new value
- *  who unsubscribes from the observable when the signal is destroyed (toSignal is destroyed when the component is destroyed)
- *  --------------------------------------------------------------------------
- * so both toObservable and toSignal are needed injection context to unsubscribe from the observable or destroy the effect
- * so both toObservable and toSignal can only be used within an injection context
- * so we do not need manual cleanup
- *  --------------------------------------------------------------------------
- */
+
 @Component({
   selector: 'app-nx-welcome',
   imports: [CommonModule],
@@ -34,7 +20,7 @@ import { CommonModule } from '@angular/common';
   styles: [],
   encapsulation: ViewEncapsulation.None,
 })
-export class RxJsInteroperability {
+export class RxJsInteroperability implements OnInit {
   readonly injector = inject(Injector);
   readonly api = inject(ApiService);
   readonly number = signal(10);
@@ -46,10 +32,6 @@ export class RxJsInteroperability {
 
 
   // call here because we are in an injection context
-  // when using toSignal it always add '| undefined' to the return type
-  // because signals always have values but observables not so to get rid of undefined good solution is 
-  // using default value to the newly created signal
-  // is we are sure that observable has initial value we can use requireSync: true
   readonly primeFactors = toSignal(this.results$, { initialValue: [], 
     // requireSync: true
     // injector: this.injector
@@ -74,11 +56,12 @@ export class RxJsInteroperability {
   }
 
   // As we know  OnInit does not run in an injection context
-  onInit(){
-    // Error: NG0203: toObservable() can be used within an injection context
+  ngOnInit(){
+    // ERROR Error: NG0203: toObservable() can only be used within an injection context such as a constructor, 
+    // a factory function, a field initializer, or a function used with `runInInjectionContext`.
     const number2 = toObservable(this.number); // this will throw an error
     const number3 = toSignal(this.number$); // this will throw an error
-    // because OnInit does not run in an injection context
+    // because ngOnInit does not run in an injection context
     // to fix it we can use injector
     const number3Fixed = toObservable(this.number, { injector: this.injector });
 
