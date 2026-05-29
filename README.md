@@ -15,17 +15,18 @@ This project demonstrates:
 
 ## Project Structure
 
-```
-src/app/
-├── 01-change-detection/       # Change detection patterns (Default vs OnPush)
-├── 02-rxjs-state-management/  # State management with RxJS
-├── 03-signal-first-touch/     # Introduction to signals
-├── 04-signal-preliminary-injection-context/  # Signals with DI and effects
-├── 05-signal-computed-effect/ # Computed signals and effects
-├── 06-rxjs-interop/          # RxJS and signals interoperability
-├── 07-signal-apis/           # Advanced signal patterns and components
-└── 08-router-inputs/         # Signal-based routing and input handling
-```
+
+- [01 Change Detection](./src/app/01-change-detection/change-detection-sample.md): Change detection patterns (Default vs OnPush)
+- [02 RxJs State Management ](./src/app/02-rxjs-state-management): State management with RxJS
+- [03 Signal First Touch ](./src/app/03-signal-first-touch): Introduction to signals
+- [04 Signal Preliminary Injection Context ](./src/app/04-signal-preliminary-injection-context): Signals with DI and effects
+- [05 Signal Computed Effect ](./src/app/05-signal-computed-effect): Computed signals and effects
+- [06 RxJs Interop ](./src/app/06-rxjs-interop): RxJS and signals interoperability
+- [07 Signal APIs ](./src/app/07-signal-apis): Advanced signal patterns and components
+- [08 Router Inputs ](./src/app/08-router-inputs): Signal-based routing and input handling
+
+
+
 
 ## Getting Started
 
