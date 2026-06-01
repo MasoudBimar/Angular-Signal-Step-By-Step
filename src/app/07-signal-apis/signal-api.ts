@@ -1,17 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, effect, ElementRef, OnInit, signal, viewChild, viewChildren, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  effect,
+  ElementRef,
+  OnInit,
+  signal,
+  viewChild,
+  viewChildren,
+  ViewContainerRef,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CurrencyConverterComponent } from './components/currency-converter/currency-converter.component';
 import { RATES } from './components/currency-converter/rates';
 import { OptionSelectorComponent } from './components/option-selector/option-selector.component';
 import { OptionDirective } from './components/option-selector/option.directive';
 import { RgbDirective } from './rgb.directive';
+import { CurrencyConverterOld } from './components/currency-converter-old/currency-converter-old';
 
 @Component({
   selector: 'app-nx-welcome',
   imports: [
     CommonModule,
     CurrencyConverterComponent,
+    CurrencyConverterOld,
     ReactiveFormsModule,
     OptionSelectorComponent,
     OptionDirective,
@@ -24,11 +37,10 @@ import { RgbDirective } from './rgb.directive';
 
     <span id="currency-label">Currency</span>
 
-
     <!-- model binding can be used with banana in the box or separatedly -->
-     <!-- Dont forget in banana in a box syntax we dont need to call the model signal we pass it by reference -->
-     <!-- [(selected)]="currency" -->
-      <!-- [selected]="currency()" (selectedChange)="currency.set($event)" -->
+    <!-- Dont forget in banana in a box syntax we dont need to call the model signal we pass it by reference -->
+    <!-- [(selected)]="currency" -->
+    <!-- [selected]="currency()" (selectedChange)="currency.set($event)" -->
     <app-option-selector
       aria-labelledby="currency-label"
       [options]="currencies"
@@ -37,11 +49,7 @@ import { RgbDirective } from './rgb.directive';
       <!-- we dont call the model signal in this case -->
       <!-- create a template for the currency option -->
       <span *appOption="let currency" class="currency-option">
-        <img
-          [src]="'/icons/' + currency + '.svg'"
-          alt="{{ currency }}"
-          class="currency-icon"
-        />
+        <img [src]="'/icons/' + currency + '.svg'" alt="{{ currency }}" class="currency-icon" />
         {{ currency }}
       </span>
     </app-option-selector>
@@ -54,14 +62,14 @@ import { RgbDirective } from './rgb.directive';
       (refreshRequired)="refreshData()"
     />
 
-    <button (click)="stopRefresh()">Stop Refresh Events</button>
+    <app-currency-converter-old [amount]="amount.value!" [currency]="currency()" />
 
+    <button (click)="stopRefresh()">Stop Refresh Events</button>
   `,
   styles: [],
   encapsulation: ViewEncapsulation.None,
 })
 export class SignalAPI implements OnInit, AfterViewInit {
-
   // with required we are sure that the viewChild will be there when we call it
   currencyConverter = viewChild(CurrencyConverterComponent);
   // without required it can be undefined so when we call the method we need to check if it is undefined
@@ -84,7 +92,6 @@ export class SignalAPI implements OnInit, AfterViewInit {
   // By grabbing the ViewContainerRef we can access the view container of that element
   // what you actually get is not the element itself but the point on the view afterwards you can insert other components or templates
   myRefDiv2 = viewChild('myRef', { read: ViewContainerRef }); // need to supply #myRef in the template
-
 
   stopRefresh() {
     // we dont need to check if it is undefined because we used required
@@ -127,7 +134,6 @@ export class SignalAPI implements OnInit, AfterViewInit {
   }
 }
 
-
 // ! We know from the classsic angular that
 // ! Viewchild Query doesn not return value until a lifecycle hook is executed (afterViewInit)
 // ? So while we understand how ViewChild and ViewChildren are implemented, we understand that
@@ -136,11 +142,9 @@ export class SignalAPI implements OnInit, AfterViewInit {
 // ! SO when we  that signal with required does not allow undefined values
 // ? for example if we want to use the viewCHild required signal in the constructor, we know for sure that the value is not initialized yet
 
-
 // In the case of signals we can access the value right away because it is lazy evaluated
 // so when we call the method that uses the viewChild it will get the value at that time
 // so we dont need to wait for a lifecycle hook to access it
-
 
 // ? contentChild and contentChildren also have the same behavior as viewChild and viewChildren
 // ? In angular 18 signal based api -- content child and content children functions are used to query projected elements or components

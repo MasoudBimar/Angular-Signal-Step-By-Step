@@ -1,4 +1,6 @@
 Converted Amount: {{ converted() | currency : currency() }}
+<br />
+<sub>New API using Signals</sub>
 <img
   src="/refresh.svg"
   (click)="manualRefresh$.next()"
@@ -8,3 +10,4 @@ Converted Amount: {{ converted() | currency : currency() }}
   title="Refresh"
   tabindex="0"
 />
+<hr />

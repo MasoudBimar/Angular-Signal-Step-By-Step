@@ -17,6 +17,7 @@ export const routes: Routes = [
   { path: 'signal-computed-effect', loadComponent: () => import('./05-signal-computed-effect/computed-signal-and-effect').then(m => m.ComputedSignalAndEffect) },
   { path: 'rxjs-interop', loadComponent: () => import('./06-rxjs-interop/rxjs-interop').then(m => m.RxJsInteroperability) },
   { path: 'signal-apis', loadComponent: () => import('./07-signal-apis/signal-api').then(m => m.SignalAPI) },
+  { path: 'signal-apis/currency-converter-old', loadComponent: () => import('./07-signal-apis/components/currency-converter-old/currency-converter-old').then(m => m.CurrencyConverterOld) },
   { path: 'signal-apis/currency-converter', loadComponent: () => import('./07-signal-apis/components/currency-converter/currency-converter.component').then(m => m.CurrencyConverterComponent) },
   { path: 'signal-apis/option-selector', loadComponent: () => import('./07-signal-apis/components/option-selector/option-selector.component').then(m => m.OptionSelectorComponent) },
   { path: 'router-inputs', loadComponent: () => import('./08-router-inputs/nx-welcome').then(m => m.NxWelcome) },
