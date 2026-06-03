@@ -11,9 +11,9 @@ This lesson collects the Angular signal-based APIs.
   - [Content Queries (content projection)](#content-queries-content-projection)
   - [Problem: Passing Html tags to a component](#problem-passing-html-tags-to-a-component)
     - [Solution 1 — `<ng-content>` (Basic, Angular-native)](#solution-1--ng-content-basic-angular-native)
-    - [Solution 2 — `@Input() TemplateRef` (Flexible, explicit API)](#solution-2--input-templateref-flexible-explicit-api)
+    - [Solution 2 — `input() TemplateRef` (Flexible, explicit API)](#solution-2--input-templateref-flexible-explicit-api)
     - [Solution 3 — DOM Manipulation via `ElementRef`](#solution-3--dom-manipulation-via-elementref)
-    - [Solution 4 — Directive + `@ContentChild` to capture `TemplateRef` (Recommended)](#solution-4--directive--contentchild-to-capture-templateref-recommended)
+    - [Solution 4 — Directive + `contentChild()` to capture `TemplateRef` (Recommended)](#solution-4--directive--contentchild-to-capture-templateref-recommended)
       - [Step 1 — Create the directive](#step-1--create-the-directive)
       - [Step 2 — Create the component](#step-2--create-the-component)
       - [Step 3 — Use in parent](#step-3--use-in-parent)
@@ -501,9 +501,9 @@ The simplest built-in Angular mechanism. The projected content lands exactly whe
 
 ---
 
-### Solution 2 — `@Input() TemplateRef` (Flexible, explicit API)
+### Solution 2 — `input() TemplateRef` (Flexible, explicit API)
 
-Pass an `<ng-template>` as an `@Input()`. The component receives a `TemplateRef` and can render it anywhere, conditionally, or multiple times.
+Pass an `<ng-template>` as an `input()`. The component receives a `TemplateRef` signal and can render it anywhere, conditionally, or multiple times.
 
 **Parent:**
 ```html
@@ -516,22 +516,33 @@ Pass an `<ng-template>` as an `@Input()`. The component receives a `TemplateRef`
 
 **Child component:**
 ```typescript
+import { NgTemplateOutlet } from '@angular/common';
+import { Component, input, TemplateRef } from '@angular/core';
+
 @Component({
   selector: 'app-list',
+  standalone: true,
+  imports: [NgTemplateOutlet],
   template: `
     <ul>
-      @for (item of items; track item.id) {
+      @for (item of items(); track item.id) {
         <li>
-          <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }">
-          </ng-container>
+          <ng-container
+            *ngTemplateOutlet="itemTemplate(); context: { $implicit: item }"
+          />
         </li>
       }
     </ul>
   `
 })
 export class ListComponent {
-  @Input() itemTemplate!: TemplateRef<any>;
-  @Input() items: any[] = [];
+  readonly itemTemplate = input.required<TemplateRef<{ $implicit: Item }>>();
+  readonly items = input.required<Item[]>();
+}
+
+interface Item {
+  id: number;
+  name: string;
 }
 ```
 
@@ -545,19 +556,27 @@ Access the raw child nodes projected onto the host element and manually move the
 
 **Child component:**
 ```typescript
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  viewChild,
+} from '@angular/core';
+
 @Component({
   selector: 'app-card',
   template: `<div #container class="card-body"></div>`
 })
-export class CardComponent implements AfterContentInit {
-  @ViewChild('container') container!: ElementRef;
-  private host= inject(ElementRef);
+export class CardComponent implements AfterViewInit {
+  private readonly host = inject(ElementRef) as ElementRef<HTMLElement>;
+  readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
-  ngAfterContentInit() {
-    const children = Array.from(this.host.nativeElement.childNodes) as Node[];
+  ngAfterViewInit() {
+    const children = Array.from(this.host.nativeElement.childNodes);
 
     children.forEach(node => {
-      this.container.nativeElement.appendChild(node);
+      this.container().nativeElement.appendChild(node);
     });
   }
 }
@@ -579,29 +598,29 @@ export class CardComponent implements AfterContentInit {
 
 ---
 
-### Solution 4 — Directive + `@ContentChild` to capture `TemplateRef` (Recommended)
+### Solution 4 — Directive + `contentChild()` to capture `TemplateRef` (Recommended)
 
-The consumer wraps their HTML in `<ng-template>` and applies a custom directive. The component reads the `TemplateRef` via `@ContentChild` and renders it wherever it wants.
+The consumer wraps their HTML in `<ng-template>` and applies a custom directive. The component reads the `TemplateRef` via `contentChild()` and renders it wherever it wants.
 
 #### Step 1 — Create the directive
 
 ```typescript
-import { Directive, TemplateRef } from '@angular/core';
+import { Directive, inject, TemplateRef } from '@angular/core';
 
 @Directive({
   selector: '[appTemplate]',
   standalone: true
 })
 export class TemplateDirective {
-  constructor(public templateRef: TemplateRef<any>) {}
+  readonly templateRef = inject(TemplateRef<unknown>);
 }
 ```
 
 #### Step 2 — Create the component
 
 ```typescript
-import { Component, ContentChild, AfterContentInit } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { Component, contentChild } from '@angular/core';
 import { TemplateDirective } from './template.directive';
 
 @Component({
@@ -610,16 +629,14 @@ import { TemplateDirective } from './template.directive';
   imports: [NgTemplateOutlet, TemplateDirective],
   template: `
     <div class="card">
-      <ng-container *ngTemplateOutlet="templateDir.templateRef"></ng-container>
+      @if (templateDir(); as templateDir) {
+        <ng-container *ngTemplateOutlet="templateDir.templateRef" />
+      }
     </div>
   `
 })
-export class CardComponent implements AfterContentInit {
-  @ContentChild(TemplateDirective) templateDir!: TemplateDirective;
-
-  ngAfterContentInit() {
-    console.log('Got template:', this.templateDir.templateRef);
-  }
+export class CardComponent {
+  readonly templateDir = contentChild(TemplateDirective);
 }
 ```
 
@@ -637,29 +654,35 @@ export class CardComponent implements AfterContentInit {
 
 #### Named multi-template variant
 
-Extend the directive with an `@Input` to support multiple named slots:
+Extend the directive with an `input()` to support multiple named slots:
 
 ```typescript
-@Directive({ selector: '[appTemplate]', standalone: true })
+import { Directive, inject, input, TemplateRef } from '@angular/core';
+
+@Directive({
+  selector: '[appTemplate]',
+  standalone: true,
+})
 export class TemplateDirective {
-  @Input('appTemplate') name!: string; // e.g. 'header' | 'body' | 'footer'
-  constructor(public templateRef: TemplateRef<any>) {}
+  readonly name = input.required<'header' | 'body' | 'footer'>({
+    alias: 'appTemplate',
+  });
+  readonly templateRef = inject(TemplateRef<unknown>);
 }
 ```
 
 ```typescript
-// In the component class
-@ContentChildren(TemplateDirective) templates!: QueryList<TemplateDirective>;
+import { computed, contentChildren } from '@angular/core';
 
-headerTemplate!: TemplateRef<any>;
-bodyTemplate!: TemplateRef<any>;
+readonly templates = contentChildren(TemplateDirective);
 
-ngAfterContentInit() {
-  this.templates.forEach(t => {
-    if (t.name === 'header') this.headerTemplate = t.templateRef;
-    if (t.name === 'body')   this.bodyTemplate   = t.templateRef;
-  });
-}
+readonly headerTemplate = computed(() =>
+  this.templates().find(template => template.name() === 'header')?.templateRef
+);
+
+readonly bodyTemplate = computed(() =>
+  this.templates().find(template => template.name() === 'body')?.templateRef
+);
 ```
 
 ```html
@@ -676,10 +699,14 @@ ngAfterContentInit() {
 <!-- Child template -->
 <div class="card">
   <div class="header">
-    <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+    @if (headerTemplate(); as headerTemplate) {
+      <ng-container *ngTemplateOutlet="headerTemplate" />
+    }
   </div>
   <div class="body">
-    <ng-container *ngTemplateOutlet="bodyTemplate"></ng-container>
+    @if (bodyTemplate(); as bodyTemplate) {
+      <ng-container *ngTemplateOutlet="bodyTemplate" />
+    }
   </div>
 </div>
 ```
