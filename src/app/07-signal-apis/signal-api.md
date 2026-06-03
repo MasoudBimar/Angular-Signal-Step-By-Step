@@ -8,7 +8,16 @@ This lesson collects the Angular signal-based APIs.
   - [Outputs New API](#outputs-new-api)
   - [Model Signals](#model-signals)
   - [View Queries](#view-queries)
-  - [Content Queries](#content-queries)
+  - [Content Queries (content projection)](#content-queries-content-projection)
+  - [Problem: Passing Html tags to a component](#problem-passing-html-tags-to-a-component)
+    - [Solution 1 — `<ng-content>` (Basic, Angular-native)](#solution-1--ng-content-basic-angular-native)
+    - [Solution 2 — `@Input() TemplateRef` (Flexible, explicit API)](#solution-2--input-templateref-flexible-explicit-api)
+    - [Solution 3 — DOM Manipulation via `ElementRef`](#solution-3--dom-manipulation-via-elementref)
+    - [Solution 4 — Directive + `@ContentChild` to capture `TemplateRef` (Recommended)](#solution-4--directive--contentchild-to-capture-templateref-recommended)
+      - [Step 1 — Create the directive](#step-1--create-the-directive)
+      - [Step 2 — Create the component](#step-2--create-the-component)
+      - [Step 3 — Use in parent](#step-3--use-in-parent)
+      - [Named multi-template variant](#named-multi-template-variant)
   - [Directive Host Bindings with Signals](#directive-host-bindings-with-signals)
   - [Outputs from Observables](#outputs-from-observables)
   - [Key Ideas](#key-ideas)
@@ -337,7 +346,7 @@ export class SignalAPI {
 ```
 
 > [!NOTE]
-> in previous angular api the `viewchild` should be used with `ngAfterViewInit` lifecycle hook to make sure that the view is initialized and the query result is available. but with the new signal-based API, the viewChild query can be accessed at any time, what is the proper way to access it?
+> In previous angular api the `viewchild` should be used with `ngAfterViewInit` lifecycle hook to make sure that the view is initialized and the query result is available. but with the new signal-based API, the viewChild query can be accessed at any time, what is the proper way to access it?
 
 Use `viewChild.required()` only when the query result must exist. Required queries remove `undefined` from the signal type, but they do not make the result available earlier in the component lifecycle. If a required query is read before Angular has produced a result, Angular throws because no value is available yet.
 
@@ -372,7 +381,7 @@ constructor() {
 ```
 
 
-## Content Queries
+## Content Queries (content projection)
 
 `contentChild()` reads projected content as a signal. In this example, the option selector looks for an `appOption` structural directive that provides a custom option template.
 
@@ -429,6 +438,251 @@ The selector renders the custom template when it exists:
 }
 ```
 
+
+
+
+## Problem: Passing Html tags to a component
+
+You have an Angular component and you want to **pass raw HTML tags between its opening and closing tags** (like you would with native HTML elements), then **render that content wherever you want** inside the component — not necessarily in a fixed slot.
+
+```html
+<!-- You want this to work naturally -->
+<app-card>
+  <h2>Title</h2>
+  <p>Some paragraph</p>
+  <button>Click me</button>
+</app-card>
+```
+
+The challenge is gaining **programmatic control** over where and how that content renders, rather than just dropping it in a fixed `<ng-content>` slot.
+
+---
+
+### Solution 1 — `<ng-content>` (Basic, Angular-native)
+
+The simplest built-in Angular mechanism. The projected content lands exactly where you place `<ng-content>`.
+
+**Parent:**
+```html
+<app-card>
+  <h2>Title</h2>
+  <p>Some content</p>
+</app-card>
+```
+
+**Child component template:**
+```html
+<div class="card">
+  <ng-content></ng-content>
+</div>
+```
+
+**Multi-slot variant** — project into named regions using `select`:
+
+```html
+<!-- Parent -->
+<app-card>
+  <h2 slot="header">My Title</h2>
+  <p slot="body">My body</p>
+</app-card>
+
+<!-- Child template -->
+<div class="card">
+  <div class="card-header">
+    <ng-content select="[slot=header]"></ng-content>
+  </div>
+  <div class="card-body">
+    <ng-content select="[slot=body]"></ng-content>
+  </div>
+</div>
+```
+
+**Limitations:** You cannot conditionally render, duplicate, or programmatically reposition the content. The slot is fixed at compile time.
+
+---
+
+### Solution 2 — `@Input() TemplateRef` (Flexible, explicit API)
+
+Pass an `<ng-template>` as an `@Input()`. The component receives a `TemplateRef` and can render it anywhere, conditionally, or multiple times.
+
+**Parent:**
+```html
+<ng-template #myTpl let-item>
+  <strong>{{ item.name }}</strong>
+</ng-template>
+
+<app-list [itemTemplate]="myTpl" [items]="data"></app-list>
+```
+
+**Child component:**
+```typescript
+@Component({
+  selector: 'app-list',
+  template: `
+    <ul>
+      @for (item of items; track item.id) {
+        <li>
+          <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }">
+          </ng-container>
+        </li>
+      }
+    </ul>
+  `
+})
+export class ListComponent {
+  @Input() itemTemplate!: TemplateRef<any>;
+  @Input() items: any[] = [];
+}
+```
+
+**Limitations:** Requires the consumer to wrap their HTML inside `<ng-template>`, which is more verbose.
+
+---
+
+### Solution 3 — DOM Manipulation via `ElementRef` 
+
+Access the raw child nodes projected onto the host element and manually move them into a target container. No `<ng-content>` needed.
+
+**Child component:**
+```typescript
+@Component({
+  selector: 'app-card',
+  template: `<div #container class="card-body"></div>`
+})
+export class CardComponent implements AfterContentInit {
+  @ViewChild('container') container!: ElementRef;
+  private host= inject(ElementRef);
+
+  ngAfterContentInit() {
+    const children = Array.from(this.host.nativeElement.childNodes) as Node[];
+
+    children.forEach(node => {
+      this.container.nativeElement.appendChild(node);
+    });
+  }
+}
+```
+
+**Parent:**
+
+```html
+<app-card>
+  <h2>Title</h2>
+  <p>Paragraph</p>
+  <button>Click me</button>
+</app-card>
+```
+
+**How it works:** Before Angular's `<ng-content>` claims them, the projected tags live on the host element's `childNodes`. You grab them and `appendChild` them wherever you want.
+
+**Limitations:** Bypasses Angular's change detection. DOM nodes moved this way are no longer part of Angular's rendering tree, so bindings (`{{ }}`, `[prop]`, `(event)`) on the projected content may break.
+
+---
+
+### Solution 4 — Directive + `@ContentChild` to capture `TemplateRef` (Recommended)
+
+The consumer wraps their HTML in `<ng-template>` and applies a custom directive. The component reads the `TemplateRef` via `@ContentChild` and renders it wherever it wants.
+
+#### Step 1 — Create the directive
+
+```typescript
+import { Directive, TemplateRef } from '@angular/core';
+
+@Directive({
+  selector: '[appTemplate]',
+  standalone: true
+})
+export class TemplateDirective {
+  constructor(public templateRef: TemplateRef<any>) {}
+}
+```
+
+#### Step 2 — Create the component
+
+```typescript
+import { Component, ContentChild, AfterContentInit } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { TemplateDirective } from './template.directive';
+
+@Component({
+  selector: 'app-card',
+  standalone: true,
+  imports: [NgTemplateOutlet, TemplateDirective],
+  template: `
+    <div class="card">
+      <ng-container *ngTemplateOutlet="templateDir.templateRef"></ng-container>
+    </div>
+  `
+})
+export class CardComponent implements AfterContentInit {
+  @ContentChild(TemplateDirective) templateDir!: TemplateDirective;
+
+  ngAfterContentInit() {
+    console.log('Got template:', this.templateDir.templateRef);
+  }
+}
+```
+
+#### Step 3 — Use in parent
+
+```html
+<app-card>
+  <ng-template appTemplate>
+    <h2>Title</h2>
+    <p>My paragraph</p>
+    <button>Click</button>
+  </ng-template>
+</app-card>
+```
+
+#### Named multi-template variant
+
+Extend the directive with an `@Input` to support multiple named slots:
+
+```typescript
+@Directive({ selector: '[appTemplate]', standalone: true })
+export class TemplateDirective {
+  @Input('appTemplate') name!: string; // e.g. 'header' | 'body' | 'footer'
+  constructor(public templateRef: TemplateRef<any>) {}
+}
+```
+
+```typescript
+// In the component class
+@ContentChildren(TemplateDirective) templates!: QueryList<TemplateDirective>;
+
+headerTemplate!: TemplateRef<any>;
+bodyTemplate!: TemplateRef<any>;
+
+ngAfterContentInit() {
+  this.templates.forEach(t => {
+    if (t.name === 'header') this.headerTemplate = t.templateRef;
+    if (t.name === 'body')   this.bodyTemplate   = t.templateRef;
+  });
+}
+```
+
+```html
+<!-- Parent -->
+<app-card>
+  <ng-template appTemplate="header">
+    <h2>Header content</h2>
+  </ng-template>
+  <ng-template appTemplate="body">
+    <p>Body content</p>
+  </ng-template>
+</app-card>
+
+<!-- Child template -->
+<div class="card">
+  <div class="header">
+    <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+  </div>
+  <div class="body">
+    <ng-container *ngTemplateOutlet="bodyTemplate"></ng-container>
+  </div>
+</div>
+```
 
 ## Directive Host Bindings with Signals
 
