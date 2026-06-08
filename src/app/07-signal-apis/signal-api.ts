@@ -35,7 +35,7 @@ import { CurrencyConverterOld } from './components/currency-converter-old/curren
     <label for="amount">Amount</label>
     <input id="amount" type="number" [formControl]="amount" />
 
-    <span id="currency-label">Currency</span>
+    <span id="currency-label">{{currency()}}</span>
 
     <!-- model binding can be used with banana in the box or separatedly -->
     <!-- Dont forget in banana in a box syntax we dont need to call the model signal we pass it by reference -->
@@ -62,7 +62,7 @@ import { CurrencyConverterOld } from './components/currency-converter-old/curren
       (refreshRequired)="refreshData()"
     />
 
-    <app-currency-converter-old [amount]="amount.value!" [currency]="currency()" />
+    <!-- <app-currency-converter-old [amount]="amount.value!" [currency]="currency()" /> -->
 
     <button (click)="stopRefresh()">Stop Refresh Events</button>
   `,
@@ -101,9 +101,9 @@ export class SignalAPI implements OnInit, AfterViewInit {
     // this.currencyConverters().forEach(c => c.stopRefresh());
   }
 
-  readonly currencies = Object.keys(RATES);
+  currencies: string[] = Object.keys(RATES);
 
-  readonly currency = signal('GBP');
+  readonly currency = signal('USD');
 
   amount = new FormControl(100);
 
@@ -112,9 +112,10 @@ export class SignalAPI implements OnInit, AfterViewInit {
   }
 
   constructor() {
+    console.log('Constructor called', this.currencies);
     // ! Accessing the viewChild required signal in the constructor (is too early)
     // ? we can use it in after view init but one of the benefits of signals is that you dont need to rely on lifecycle hooks
-    console.log('Accesing view child required value', this.currencyConverter());
+    // console.log('Accesing view child required value', this.currencyConverter());
     // ! NG0951: child Query result is Required but no value is available.
 
     // * effects are executed after all the lifecycle hooks are executed
@@ -125,7 +126,7 @@ export class SignalAPI implements OnInit, AfterViewInit {
 
   ngOnInit() {
     // ! Accessing the viewChild required signal in the ngOnInit lifecycle hook (is too early / is before afterViewInit)
-    console.log('Accessing view child required value', this.currencyConverter()); // ! NG0951: child Query result is Required but no value is available.
+    // console.log('Accessing view child required value', this.currencyConverter()); // ! NG0951: child Query result is Required but no value is available.
   }
 
   ngAfterViewInit(): void {

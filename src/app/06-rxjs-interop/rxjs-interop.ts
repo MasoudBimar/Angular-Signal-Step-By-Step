@@ -64,8 +64,8 @@ export class RxJsInteroperability implements OnInit {
   ngOnInit() {
     // ERROR Error: NG0203: toObservable() can only be used within an injection context such as a constructor,
     // a factory function, a field initializer, or a function used with `runInInjectionContext`.
-    const number2 = toObservable(this.number); // this will throw an error
-    const number3 = toSignal(this.number$); // this will throw an error
+    // const number2 = toObservable(this.number); // this will throw an error
+    // const number3 = toSignal(this.number$); // this will throw an error
     // because ngOnInit does not run in an injection context
     // to fix it we can use injector
     const number3Fixed = toObservable(this.number, { injector: this.injector });

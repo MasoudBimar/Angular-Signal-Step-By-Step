@@ -1,8 +1,6 @@
-import { Component, Input, input } from '@angular/core';
-import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, interval, map, startWith, Subject, switchMap, takeUntil } from 'rxjs';
-import { RATES } from '../currency-converter/rates';
 import { CurrencyPipe } from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { RATES } from '../currency-converter/rates';
 
 @Component({
   selector: 'app-currency-converter-old',

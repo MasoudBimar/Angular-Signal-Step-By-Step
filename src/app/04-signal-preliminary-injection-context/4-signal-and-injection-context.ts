@@ -1,7 +1,5 @@
-import { Component, DestroyRef, effect, EffectRef, inject, Injector, OnInit, runInInjectionContext, signal, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { interval } from 'rxjs';
-import { startCounting } from './2-passing-injection-context';
+import { Component, DestroyRef, effect, EffectRef, inject, Injector, signal, ViewEncapsulation } from '@angular/core';
 
 /**
  * Reactive Context (synchronous)
@@ -56,9 +54,9 @@ export class SignalAndInjectionContext {
         // So the effect lifespan of an ijector
         // when an effect created it needs an ijector in order to recieve a destoryRef
         //  and attach itself to the destoryRef and when the destoryRef triggers the effect will stop
-        effect(() => {
-            console.log('heyyyyyyyyy', this.value())
-        })
+        // effect(() => {
+        //     console.log('heyyyyyyyyy', this.value())
+        // });
 
         // how to fix the error
         // we can inject the injector

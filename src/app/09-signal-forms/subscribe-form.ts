@@ -1,7 +1,6 @@
-import { Component, effect, signal } from "@angular/core";
-import { Subscription, SubscriptionSchema, initialData } from "./subscription";
-import { Form } from "@angular/forms";
+import { Component, effect, EnvironmentInjector, inject, runInInjectionContext, signal } from "@angular/core";
 import { FormField, form } from "@angular/forms/signals";
+import { Subscription, SubscriptionSchema, initialData } from "./subscription";
 
 @Component({
   selector: 'app-subscribe-form',
@@ -10,6 +9,7 @@ import { FormField, form } from "@angular/forms/signals";
   imports: [FormField]
 })
 export class SubscribeForm {
+  
 
   subscribeModel = signal<Subscription>(initialData); // form data model
 
