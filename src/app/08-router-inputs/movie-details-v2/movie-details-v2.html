@@ -1,0 +1,37 @@
+@if (movie$ | async; as movie) {
+  <mat-card appearance="outlined" class="movie-card">
+    <mat-card-header>
+      <!-- <div mat-card-avatar class="example-header-image"></div> -->
+      <mat-card-title>{{ movie.name }}</mat-card-title>
+      <!-- <mat-card-subtitle></mat-card-subtitle> -->
+    </mat-card-header>
+    <img
+      mat-card-image
+      [src]="poster$ | async"
+      (error)="renderImagePlaceholder($event)"
+      [alt]="movie.name"
+      width="380"
+      height="190"
+    />
+    <mat-card-content>
+      <div class="cast">
+        @for (actor of movie.cast; track actor) {
+          <div class="actor">{{ actor }}</div>
+        }
+      </div>
+
+      <p>
+        {{ movie.description }}
+      </p>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      @if (movie.id > 1) {
+        <a matButton [routerLink]="['/router-inputs/movie-v2', movie.id - 1]"> Previous Movie </a>
+      }
+      @if (movie.id < 12) {
+        <a matButton [routerLink]="['/router-inputs/movie-v2', movie.id + 1]">Next Movie</a>
+      }
+    </mat-card-actions>
+  </mat-card>
+}
