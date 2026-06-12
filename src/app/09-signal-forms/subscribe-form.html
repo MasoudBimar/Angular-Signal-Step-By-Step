@@ -10,7 +10,7 @@
         <span>First Name:</span>
         <input
           type="text"
-          class="form-control"
+          class="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20"
           id="firstNameId"
           [formField]="subscribeForm.firstName"
           placeholder="First Name (optional)"
@@ -20,7 +20,7 @@
         <span>Last Name: </span>
         <input
           type="text"
-          class="form-control"
+          class="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20"
           id="lastNameId"
           [formField]="subscribeForm.lastName"
           placeholder="Last Name (optional)"
@@ -30,20 +30,20 @@
         <span>
           Email:
           @if (subscribeForm.email().required()) {
-            <span class="text-danger">*</span>
+            <span class="text-red-600">*</span>
           }
         </span>
 
         <input
           type="email"
-          class="form-control"
+          class="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20"
           id="emailId"
           [formField]="subscribeForm.email"
           placeholder="Email (optional)"
         />
         <br />
         @if (subscribeForm.email().invalid() && subscribeForm.email().touched()) {
-          <div class="alert alert-danger">
+          <div class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
             @for (error of subscribeForm.email().errors(); track error.kind) {
               <div>{{ error.message }}</div>
             }
@@ -55,20 +55,20 @@
         <span>
           Phone:
           @if (subscribeForm.phone().required()) {
-            <span class="text-danger">*</span>
+            <span class="text-red-600">*</span>
           }
         </span>
 
         <input
           type="text"
-          class="form-control"
+          class="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20"
           id="phoneId"
           [formField]="subscribeForm.phone"
           placeholder="Phone (optional)"
         />
         <br />
         @if (subscribeForm.phone().invalid() && subscribeForm.phone().touched()) {
-          <div class="alert alert-danger">
+          <div class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
             @for (error of subscribeForm.phone().errors(); track error.kind) {
               <div>{{ error.message }}</div>
             }
@@ -85,13 +85,13 @@
         <span> Years As Fan: </span>
         <input
           type="number"
-          class="form-control"
+          class="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20"
           id="yearsAsFanId"
           [formField]="subscribeForm.yearsAsFan"
           placeholder="Years As Fan (optional)"
         />
       </label>
-      <div class="row">
+      <div class="flex">
         <div class="row-value">
           <button type="button" class="flip-card__btn">Let`s go!</button>
         </div>

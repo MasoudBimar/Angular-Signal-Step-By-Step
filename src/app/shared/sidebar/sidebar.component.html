@@ -1,62 +1,73 @@
-<div class="sidebar d-flex flex-column flex-shrink-0 p-3">
+<div
+  class="flex h-full w-full shrink-0 flex-col overflow-hidden border-r border-slate-400/20 bg-slate-950 bg-gradient-to-b from-slate-900 to-gray-900 p-3 font-['Space_Grotesk','Trebuchet_MS','Gill_Sans','Calibri',sans-serif] text-slate-50"
+>
   <a
     href="/"
-    class="sidebar-brand d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none"
-    >
-    <span class="fs-6">Angular Signal Step by Step</span>
+    class="mb-3 flex items-center text-sm font-semibold tracking-normal text-slate-50 no-underline"
+  >
+    <span>Angular Signal Step by Step</span>
   </a>
-  <hr />
-  <nav class="sidebar-nav flex-grow-1">
-    <div class="accordion accordion-flush" id="sidebarAccordion">
+
+  <hr class="border-slate-400/25" />
+
+  <nav class="min-h-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable]">
+    <div id="sidebarAccordion">
       @for (item of menuItems; track item) {
-        <div class="accordion-item bg-transparent border-0">
+        <div class="mt-1 first:mt-0">
           @if (item.children?.length) {
-            <h2 class="accordion-header d-flex align-items-center justify-content-between gap-2">
+            <h2 class="m-0 flex items-center justify-between gap-2">
               @if (item.route) {
                 <a
-                  class="nav-link flex-grow-1 p-0"
+                  class="flex flex-1 items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-semibold leading-snug text-slate-50 no-underline transition hover:bg-white/10"
                   [routerLink]="item.route"
-                  routerLinkActive="active"
+                  routerLinkActive="bg-white/15 text-white shadow-[inset_3px_0_0_#7dd3fc]"
                   [routerLinkActiveOptions]="{ exact: true }"
-                  >
+                  ariaCurrentWhenActive="page"
+                >
                   {{ item.label }}
                 </a>
               } @else {
                 <button
                   type="button"
-                  class="accordion-button collapsed w-100"
+                  [class]="
+                    'w-full rounded-[10px] bg-transparent px-3 py-2 text-left text-sm font-semibold leading-snug text-slate-50 transition hover:bg-white/10' +
+                    (isExpanded(item) ? ' bg-white/15' : '')
+                  "
                   (click)="toggle(item)"
                   [attr.aria-expanded]="isExpanded(item)"
                   [attr.aria-controls]="'sidebar-group-' + item.id"
-                  >
+                >
                   {{ item.label }}
                 </button>
               }
+
               <button
                 type="button"
-                class="btn btn-sm btn-link text-decoration-none"
+                class="rounded-md px-2 py-1 text-sm text-slate-200 no-underline transition hover:bg-white/10 hover:text-white"
                 (click)="toggle(item)"
                 [attr.aria-expanded]="isExpanded(item)"
                 [attr.aria-controls]="'sidebar-group-' + item.id"
-                >
-                <span [class.rotate-180]="isExpanded(item)">▾</span>
+              >
+                <span class="block transition-transform" [class.rotate-180]="isExpanded(item)">v</span>
               </button>
             </h2>
+
             <div
-              class="accordion-collapse collapse"
-              [class.show]="isExpanded(item)"
+              class="overflow-hidden transition-all duration-200"
+              [class]="isExpanded(item) ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'"
               [attr.id]="'sidebar-group-' + item.id"
-              >
-              <div class="accordion-body p-0">
-                <ul class="nav nav-pills flex-column mb-2">
+            >
+              <div class="ml-1 border-l border-slate-400/25 py-1 pl-3">
+                <ul class="mb-2 flex flex-col gap-1">
                   @for (child of item.children; track child) {
-                    <li class="nav-item">
+                    <li>
                       <a
-                        class="nav-link"
+                        class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm leading-snug text-slate-300 no-underline transition hover:bg-white/10 hover:text-white"
                         [routerLink]="child.route"
-                        routerLinkActive="active"
+                        routerLinkActive="bg-white/15 text-white shadow-[inset_3px_0_0_#7dd3fc]"
                         [routerLinkActiveOptions]="{ exact: true }"
-                        >
+                        ariaCurrentWhenActive="page"
+                      >
                         {{ child.label }}
                       </a>
                     </li>
@@ -65,13 +76,14 @@
               </div>
             </div>
           } @else if (item.route) {
-            <h2 class="accordion-header">
+            <h2 class="m-0">
               <a
-                class="nav-link"
+                class="flex items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-semibold leading-snug text-slate-50 no-underline transition hover:bg-white/10"
                 [routerLink]="item.route"
-                routerLinkActive="active"
+                routerLinkActive="bg-white/15 text-white shadow-[inset_3px_0_0_#7dd3fc]"
                 [routerLinkActiveOptions]="{ exact: true }"
-                >
+                ariaCurrentWhenActive="page"
+              >
                 {{ item.label }}
               </a>
             </h2>
@@ -80,22 +92,24 @@
       }
     </div>
   </nav>
-  <hr />
+
+  <hr class="border-slate-400/25" />
+
   <div>
     <a
       href="https://github.com/MasoudBimar"
       target="_blank"
-      class="sidebar-footer d-flex align-items-center text-decoration-none"
+      class="flex items-center gap-2 text-sm text-slate-300 no-underline transition hover:text-white"
       aria-expanded="false"
-      >
+    >
       <img
         src="https://avatars.githubusercontent.com/u/13163778?v=4&size=128"
         alt=""
         width="32"
         height="32"
-        class="rounded-circle me-2"
-        />
-      <strong>Masoud Bimmer's Github</strong>
+        class="size-8 rounded-full border-2 border-slate-400/25"
+      />
+      <strong class="font-semibold text-slate-50">Masoud Bimmer's Github</strong>
     </a>
   </div>
 </div>

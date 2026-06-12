@@ -5,6 +5,7 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+@import "tailwindcss";
 
 html {
   @include mat.theme((
@@ -140,21 +141,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .fundamentals-card a:hover {
   text-decoration: underline;
-}
-
-.fundamentals-card .form-control {
-  border-radius: 12px;
-  border-color: #d4dde5;
-}
-
-.fundamentals-card .form-control:focus {
-  border-color: #0f4c5c;
-  box-shadow: 0 0 0 3px rgba(15, 76, 92, 0.2);
-}
-
-.fundamentals-card .btn {
-  border-radius: 999px;
-  font-weight: 600;
 }
 
 .code-card-head {
