@@ -16,7 +16,7 @@ import { MatAnchor } from '@angular/material/button';
 export default class MovieDetailsComponent {
   readonly moviesService = inject(MoviesService);
 
-  readonly id = input.required({ transform: numberAttribute });
+  readonly id = input.required({ transform: numberAttribute }); // transform function to convert the string id from the route to a number
 
   readonly movie = computed(() => this.moviesService.movies().find((mv) => mv.id === this.id()));
 
