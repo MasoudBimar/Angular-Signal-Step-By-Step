@@ -1,15 +1,37 @@
 @if (movie(); as movie) {
-    <div class="meta">
-        <img [src]="poster()" alt="movie.name">
-        <h1>{{movie.name}}</h1>   
-        <div class="cast">
-            @for(actor of movie.cast; track actor) {
-                <div class="actor">{{actor}}</div>
-            }
-        </div> 
-    </div>
-    <p>
-        {{movie.description}}
-    </p>
+  <mat-card appearance="outlined" class="movie-card">
+    <mat-card-header>
+      <mat-card-title>{{ movie.name }}</mat-card-title>
+    </mat-card-header>
+    <img
+      mat-card-image
+      [src]="movie.posterImage"
+      (error)="renderImagePlaceholder($event)"
+      [alt]="movie.name"
+      width="380"
+      height="190"
+    />
+    <mat-card-content>
+      <div class="cast">
+        @for (actor of movie.cast; track actor) {
+          <div class="actor">{{ actor }}</div>
+        }
+      </div>
+
+      <p>
+        {{ movie.description }}
+      </p>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      @if (movie.id > 1) {
+        <a matButton [routerLink]="['/router-inputs/movie', movie.id - 1]"> Previous Movie </a>
+      }
+      @if (movie.id < 12) {
+        <a matButton [routerLink]="['/router-inputs/movie', movie.id + 1]">Next Movie</a>
+      }
+    </mat-card-actions>
+  </mat-card>
+
 
 }
